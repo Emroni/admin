@@ -3,22 +3,26 @@
 {% set title = 'Clients' %}
 
 {% block content %}
-    <table class="table table-sm table-hover">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Address</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for client in clients %}
-                <tr>
-                    <td>{{ client.name }}</td>
-                    <td>{{ client.email }}</td>
-                    <td>{{ client.address }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% embed 'partials/card.html.twig' with {items:clients, title:'Clients'} %}
+        {% block body %}
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                        <tr>
+                            <td>{{ client.name }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.address }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}
