@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% embed 'partials/card.html.twig' with {title:client.name} %}
+        {% block body %}
+            {{ form(form) }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-	{% embed 'partials/card.html.twig' with {title:client.name} %}
+	{% embed 'partials/card.html.twig' with { title:client.name, actions: {
+        'Edit':path('client_edit', {id:client.id}),
+    }} %}
 		{% block body %}
 			<table class="table table-sm table-hover">
 				<tbody>

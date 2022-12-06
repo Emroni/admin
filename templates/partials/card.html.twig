@@ -1,8 +1,17 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between">
         <h1 class="card-title m-0 h3">
             {{ items is defined ? items|length : '' }} {{ title }}
         </h1>
+        {% if actions is defined %}
+            <div class="btn-group-sm">
+                {% for name, url in actions %}
+                    <a class="btn btn-secondary" href="{{ url }}">
+                        {{ name }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
     <div class="card-body">
         {% block body %}{% endblock %}
