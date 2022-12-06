@@ -9,13 +9,31 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClientController extends AbstractController
 {
-    #[Route('/client', name: 'client')]
-    public function index(ClientRepository $clientRepository): Response
-    {
-        $clients = $clientRepository->findAll();
+    /** @var ClientRepository */
+    private $clientRepository;
 
-        return $this->render('client/index.html.twig', [
+    public function __construct(ClientRepository $clientRepository)
+    {
+        $this->clientRepository = $clientRepository;
+    }
+
+    #[Route('/client', name: 'client_list')]
+    public function list(): Response
+    {
+        $clients = $this->clientRepository->findAll();
+
+        return $this->render('client/list.html.twig', [
             'clients' => $clients,
+        ]);
+    }
+
+    #[Route('/client/{id}', name: 'client_view')]
+    public function view(int $id): Response
+    {
+        $client = $this->clientRepository->find($id);
+
+        return $this->render('client/view.html.twig', [
+            'client' => $client,
         ]);
     }
 }

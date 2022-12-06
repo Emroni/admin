@@ -16,7 +16,9 @@
                 <tbody>
                     {% for client in clients %}
                         <tr>
-                            <td>{{ client.name }}</td>
+                            <td>
+                                <a href="{{ path('client_view', {id:client.id}) }}">{{ client.name }}</a>
+                            </td>
                             <td>{{ client.email }}</td>
                             <td>{{ client.address }}</td>
                         </tr>

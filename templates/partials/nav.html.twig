@@ -2,13 +2,13 @@
 
 {% macro item(route, title) %}
     {% set url = path(route) %}
-    {% set active = app.request.get('_route')|slice(0, route|length) == route %}
+    {% set active = app.request.get('_route')|split('_')|first == route|split('_')|first %}
     <a class="px-3 py-2 text-light text-decoration-none {{ active ? 'bg-secondary' : '' }}" href="{{ url }}">{{ title }}</a>
 {% endmacro %}
 
 <nav class="bg-dark">
     <div class="d-flex justify-content-start px-3 px-md-4 px-lg-5">
         {{ macro.item('dashboard', 'Dashboard') }}
-        {{ macro.item('client', 'Clients') }}
+        {{ macro.item('client_list', 'Clients') }}
     </div>
 </nav>
