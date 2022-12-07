@@ -3,7 +3,7 @@
 {% set title = 'Clients' %}
 
 {% block content %}
-    {% embed 'partials/card.html.twig' with {items:clients, title:'Clients', actions: {
+    {% embed 'partials/card.html.twig' with {title:clients|length ~ ' Clients', actions: {
         'Add':path('client_add'),
     }} %}
         {% block body %}

@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% set title = client.name %}
+
 {% block content %}
-	{% embed 'partials/card.html.twig' with { title:client.name, actions: {
+	{% embed 'partials/card.html.twig' with { actions: {
         'Edit':path('client_edit', {id:client.id}),
     }} %}
 		{% block body %}

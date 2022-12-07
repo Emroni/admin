@@ -1,0 +1,7 @@
+{% extends 'bootstrap_5_layout.html.twig' %}
+
+{% block submit_row %}
+    <div class="{{ form.vars.name == 'delete' ? 'float-start' : 'float-end' }}">
+        {{- form_widget(form) -}}
+    </div>
+{% endblock %}

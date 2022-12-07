@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Form\Type\ClientType;
 use App\Repository\ClientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,8 +49,9 @@ class ClientController extends AbstractController
             ]);
         }
 
-        return $this->render('client/add.html.twig', [
+        return $this->render('partials/form.html.twig', [
             'form' => $form,
+            'formTitle' => 'Add Client',
         ]);
     }
 
@@ -75,7 +76,8 @@ class ClientController extends AbstractController
 
         // Check submit
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form instanceof Form && $form->getClickedButton()) {
+            $deleteButton = $form->get('delete');
+            if ($deleteButton instanceof SubmitButton && $deleteButton->isClicked()) {
                 // Delete client
                 $this->clientRepository->remove($client, true);
                 
@@ -94,9 +96,9 @@ class ClientController extends AbstractController
             }
         }
 
-        return $this->render('client/edit.html.twig', [
-            'client' => $client,
+        return $this->render('partials/form.html.twig', [
             'form' => $form,
+            'formTitle' => 'Edit ' . $client->getName(),
         ]);
     }
 }
