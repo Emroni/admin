@@ -29,6 +29,30 @@ class ClientController extends AbstractController
         ]);
     }
 
+    #[Route('/client/add', name: 'client_add')]
+    public function add(Request $request): Response
+    {
+        // Create form
+        $form = $this->createForm(ClientType::class);
+        $form->handleRequest($request);
+
+        // Check submit
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Save client
+            $client = $form->getData();
+            $this->clientRepository->save($client, true);
+            
+            // Redirect to client
+            return $this->redirectToRoute('client_view', [
+                'id' => $client->getId(),
+            ]);
+        }
+
+        return $this->render('client/add.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/client/{id}', name: 'client_view')]
     public function view(int $id): Response
     {
@@ -44,12 +68,17 @@ class ClientController extends AbstractController
     {
         $client = $this->clientRepository->find($id);
 
+        // Create form
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
+        // Check submit
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // Save client
             $client = $form->getData();
             $this->clientRepository->save($client, true);
             
+            // Redirect to client
             return $this->redirectToRoute('client_view', [
                 'id' => $id,
             ]);

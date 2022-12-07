@@ -3,7 +3,9 @@
 {% set title = 'Clients' %}
 
 {% block content %}
-    {% embed 'partials/card.html.twig' with {items:clients, title:'Clients'} %}
+    {% embed 'partials/card.html.twig' with {items:clients, title:'Clients', actions: {
+        'Add':path('client_add'),
+    }} %}
         {% block body %}
             <table class="table table-sm table-hover">
                 <thead>
