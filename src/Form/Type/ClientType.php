@@ -15,6 +15,7 @@ class ClientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // Build form
         $builder
             ->add('name', TextType::class)
             ->add('email', EmailType::class, [
@@ -27,6 +28,18 @@ class ClientType extends AbstractType
                 'required' => false,
             ])
             ->add('save', SubmitType::class);
+
+        // Add delete
+        $client = $options['data'] ?? null;
+        if ($client) {
+            $builder->add('delete', SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn-danger',
+                    'disabled' => !$client->isDeletable(),
+                    'onclick' => 'window.confirm(\'Are you sure?\') ? null : event.preventDefault();'
+                ],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

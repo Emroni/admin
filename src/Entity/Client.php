@@ -33,6 +33,11 @@ class Client
         return $this->id;
     }
 
+    public function isDeletable(): ?bool
+    {
+        return true;
+    }
+
     public function getName(): ?string
     {
         return $this->name;

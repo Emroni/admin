@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\Type\ClientType;
 use App\Repository\ClientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -71,17 +72,26 @@ class ClientController extends AbstractController
         // Create form
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
-        // Check submit
 
+        // Check submit
         if ($form->isSubmitted() && $form->isValid()) {
-            // Save client
-            $client = $form->getData();
-            $this->clientRepository->save($client, true);
-            
-            // Redirect to client
-            return $this->redirectToRoute('client_view', [
-                'id' => $id,
-            ]);
+            if ($form instanceof Form && $form->getClickedButton()) {
+                // Delete client
+                $this->clientRepository->remove($client, true);
+                
+                // Redirect to list
+                return $this->redirectToRoute('client_list');
+
+            } else {
+                // Save client
+                $client = $form->getData();
+                $this->clientRepository->save($client, true);
+
+                // Redirect to client
+                return $this->redirectToRoute('client_view', [
+                    'id' => $id,
+                ]);
+            }
         }
 
         return $this->render('client/edit.html.twig', [
