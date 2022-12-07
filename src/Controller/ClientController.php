@@ -42,6 +42,9 @@ class ClientController extends AbstractController
             // Save client
             $client = $form->getData();
             $this->clientRepository->save($client, true);
+
+            // Add notification
+            $this->addFlash('success', "Added Client <b>{$client->getName()}</b>");
             
             // Redirect to client
             return $this->redirectToRoute('client_view', [
@@ -80,6 +83,9 @@ class ClientController extends AbstractController
             if ($deleteButton instanceof SubmitButton && $deleteButton->isClicked()) {
                 // Delete client
                 $this->clientRepository->remove($client, true);
+
+                // Add notification
+                $this->addFlash('danger', "Deleted Client <b>{$client->getName()}</b>");
                 
                 // Redirect to list
                 return $this->redirectToRoute('client_list');
@@ -88,6 +94,9 @@ class ClientController extends AbstractController
                 // Save client
                 $client = $form->getData();
                 $this->clientRepository->save($client, true);
+
+                // Add notification
+                $this->addFlash('success', "Updated Client <b>{$client->getName()}</b>");
 
                 // Redirect to client
                 return $this->redirectToRoute('client_view', [
