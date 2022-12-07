@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% set title = formTitle is defined ? formTitle : (form.vars.value ? 'Edit' : 'Add') %}
+
+{% block content %}
+    {% embed 'partials/card.html.twig' with {title:title} %}
+        {% block body %}
+            {{ form(form) }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

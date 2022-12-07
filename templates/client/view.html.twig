@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% set title = client.name %}
+
+{% block content %}
+	{% embed 'partials/card.html.twig' with { actions: {
+        'Edit':path('client_edit', {id:client.id}),
+    }} %}
+		{% block body %}
+			<table class="table table-sm table-hover">
+				<tbody>
+					<tr>
+						<th>Name</th>
+						<td>{{ client.name }}</td>
+					</tr>
+					<tr>
+						<th>Email</th>
+						<td>{{ client.email }}</td>
+					</tr>
+					<tr>
+						<th>Address</th>
+						<td>{{ client.address }}</td>
+					</tr>
+				</tbody>
+			</table>
+		{% endblock %}
+	{% endembed %}
+{% endblock %}

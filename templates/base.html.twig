@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<title>{{ title is defined ? (title ~ ' - ') : '' }}Admin</title>
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/css/main.css" rel="stylesheet">
 		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
@@ -16,6 +17,7 @@
 		{% block body %}
             {% include 'partials/nav.html.twig' %}
 			<main class="p-3 p-md-4 p-lg-5">
+                {% include 'partials/notifications.html.twig' %}
 				{% block content %}{% endblock %}
 			</main>
 		{% endblock %}
