@@ -47,4 +47,10 @@ class ClientRepository extends ServiceEntityRepository
 
         return $this->findBy([], $orderBy);
     }
+
+    public function queryAll()
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.name', 'ASC');
+    }
 }
