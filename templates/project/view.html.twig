@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% set title = project.name %}
+
+{% block content %}
+	{% embed 'partials/card.html.twig' %}
+		{% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Edit', path:path('project_edit', {id:project.id})} %}
+		{% endblock %}
+		{% block body %}
+			<table class="table table-sm table-hover">
+				<tbody>
+					<tr>
+						<th>Name</th>
+						<td>{{ project.name }}</td>
+					</tr>
+					<tr>
+						<th>Client</th>
+						<td>
+                            <a href="{{ path('client_view', {id:project.client.id}) }}">{{ project.client.name }}</a>
+                        </td>
+					</tr>
+				</tbody>
+			</table>
+		{% endblock %}
+	{% endembed %}
+{% endblock %}

@@ -16,14 +16,42 @@
 					</tr>
 					<tr>
 						<th>Email</th>
-						<td>{{ client.email }}</td>
+						<td>
+                            <a href="mailto:{{ client.email }}">{{ client.email }}</a>
+                        </td>
 					</tr>
 					<tr>
 						<th>Address</th>
 						<td>{{ client.address }}</td>
 					</tr>
+					<tr>
+						<th>Projects</th>
+						<td>{{ client.projects|length }}</td>
+					</tr>
 				</tbody>
 			</table>
 		{% endblock %}
 	{% endembed %}
+
+    {% embed 'partials/card.html.twig' with {title:client.projects|length ~ ' Projects'} %}
+        {% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Add', path:path('project_add', {client:client.id})} %}
+        {% endblock %}
+        {% block body %}
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in client.projects %}
+                        <tr data-link="{{ path('project_view', {id:project.id}) }}">
+                            <td>{{ project.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}
