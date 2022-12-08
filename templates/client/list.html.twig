@@ -17,10 +17,8 @@
                 </thead>
                 <tbody>
                     {% for client in clients %}
-                        <tr>
-                            <td>
-                                <a href="{{ path('client_view', {id:client.id}) }}">{{ client.name }}</a>
-                            </td>
+                        <tr data-link="{{ path('client_view', {id:client.id}) }}">
+                            <td>{{ client.name }}</td>
                             <td>{{ client.email }}</td>
                             <td>{{ client.address }}</td>
                         </tr>
