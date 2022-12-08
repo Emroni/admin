@@ -25,6 +25,11 @@ class Project
         return $this->id;
     }
 
+    public function isDeletable(): ?bool
+    {
+        return true;
+    }
+
     public function getClient(): ?Client
     {
         return $this->client;

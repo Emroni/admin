@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Project;
 use App\Form\Type\ProjectType;
+use App\Repository\ClientRepository;
 use App\Repository\ProjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\SubmitButton;
@@ -12,11 +14,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProjectController extends AbstractController
 {
+    /** @var ClientRepository */
+    private $clientRepository;
+
     /** @var ProjectRepository */
     private $projectRepository;
 
-    public function __construct(ProjectRepository $projectRepository)
+    public function __construct(ClientRepository $clientRepository, ProjectRepository $projectRepository)
     {
+        $this->clientRepository = $clientRepository;
         $this->projectRepository = $projectRepository;
     }
 
@@ -33,8 +39,17 @@ class ProjectController extends AbstractController
     #[Route('/project/add', name: 'project_add')]
     public function add(Request $request): Response
     {
+        // Create project
+        $project = new Project();
+
+        // Add client
+        if ($request->get('client')) {
+            $client = $this->clientRepository->find($request->get('client'));
+            $project->setClient($client);
+        }
+
         // Create form
-        $form = $this->createForm(ProjectType::class);
+        $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         // Check submit

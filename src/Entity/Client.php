@@ -45,7 +45,7 @@ class Client
 
     public function isDeletable(): ?bool
     {
-        return true;
+        return !$this->getProjects()->count();
     }
 
     public function getName(): ?string
