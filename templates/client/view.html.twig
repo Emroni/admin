@@ -3,9 +3,10 @@
 {% set title = client.name %}
 
 {% block content %}
-	{% embed 'partials/card.html.twig' with { actions: {
-        'Edit':path('client_edit', {id:client.id}),
-    }} %}
+	{% embed 'partials/card.html.twig' %}
+		{% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Edit', path:path('client_edit', {id:client.id})} %}
+		{% endblock %}
 		{% block body %}
 			<table class="table table-sm table-hover">
 				<tbody>

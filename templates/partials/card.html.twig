@@ -3,15 +3,9 @@
         <h1 class="card-title m-0 h3">
             {{ title }}
         </h1>
-        {% if actions is defined %}
             <div class="btn-group-sm">
-                {% for name, url in actions %}
-                    <a class="btn btn-secondary" href="{{ url }}">
-                        {{ name }}
-                    </a>
-                {% endfor %}
+                {% block actions %}{% endblock %}
             </div>
-        {% endif %}
     </div>
     <div class="card-body">
         {% block body %}{% endblock %}

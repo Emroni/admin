@@ -3,9 +3,10 @@
 {% set title = 'Clients' %}
 
 {% block content %}
-    {% embed 'partials/card.html.twig' with {title:clients|length ~ ' Clients', actions: {
-        'Add':path('client_add'),
-    }} %}
+    {% embed 'partials/card.html.twig' with {title:clients|length ~ ' Clients'} %}
+        {% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Add', path:path('client_add')} %}
+        {% endblock %}
         {% block body %}
             <table class="table table-sm table-hover">
                 <thead>
