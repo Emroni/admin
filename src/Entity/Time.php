@@ -29,6 +29,30 @@ class Time
         return $this->id;
     }
 
+    public function isDeletable(): bool
+    {
+        return true;
+    }
+
+    public function getName(): string
+    {
+        $date = $this->getDate();
+        $duration = $this->getDuration();
+        
+        if ($date && $duration) {
+            return $date->format('Y-m-d') . ' — ' . $duration->format('H:i');
+        }
+
+        return '0000-00-00 — 00:00';
+    }
+
+    public function getFullName(): ?string
+    {
+        $taskFullName = $this->getTask()->getFullName();
+
+        return "{$taskFullName} › {$this->name}";
+    }
+
     public function getTask(): ?Task
     {
         return $this->task;

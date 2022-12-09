@@ -46,7 +46,7 @@ class Task
 
     public function isDeletable(): ?bool
     {
-        return true;
+        return !$this->getTimes()->count();
     }
 
     public function getProject(): ?Project
@@ -71,6 +71,13 @@ class Task
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        $projectFullName = $this->getProject()->getFullName();
+
+        return "{$projectFullName} ‣ {$this->name}";
     }
 
     public function getBilling(): ?string

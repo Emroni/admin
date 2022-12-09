@@ -20,6 +20,7 @@ class TaskType extends AbstractType
     {
         // Get entities
         $task = $options['data'] ?? null;
+        $project = $task->getProject();
 
         // Build form
         $builder
@@ -27,9 +28,9 @@ class TaskType extends AbstractType
             ->add('project', EntityType::class, [
                 'class'         => Project::class,
                 'choice_label' => 'fullName',
-                'query_builder' => function (ProjectRepository $projectRepository) use ($task) {
-                    if ($task) {
-                        $client = $task->getProject()->getClient();
+                'query_builder' => function (ProjectRepository $projectRepository) use ($project) {
+                    if ($project) {
+                        $client = $project->getClient();
                         return $projectRepository->queryByClient($client);
                     }
                     return $projectRepository->queryAll();
