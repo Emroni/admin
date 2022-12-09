@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% set title = task.name %}
+
+{% block content %}
+	{% embed 'partials/card.html.twig' %}
+		{% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Edit', path:path('task_edit', {id:task.id})} %}
+		{% endblock %}
+		{% block body %}
+			<table class="table table-sm table-hover">
+				<tbody>
+					<tr>
+						<th>Name</th>
+						<td>{{ task.name }}</td>
+					</tr>
+					<tr>
+						<th>Project</th>
+						<td>
+                            <a href="{{ path('project_view', {id:task.project.id}) }}">{{ task.project.name }}</a>
+                        </td>
+					</tr>
+                    <tr>
+                        <th>Billing</th>
+                        <td>{{ task.billing }}</td>
+                    </tr>
+                    <tr>
+                        <th>Currency</th>
+                        <td>{{ task.currency }}</td>
+                    </tr>
+                    <tr>
+                        <th>Price</th>
+                        <td>{{ task.price }}</td>
+                    </tr>
+				</tbody>
+			</table>
+		{% endblock %}
+	{% endembed %}
+{% endblock %}

@@ -34,6 +34,11 @@ class Task
         return $this->id;
     }
 
+    public function isDeletable(): ?bool
+    {
+        return true;
+    }
+
     public function getProject(): ?Project
     {
         return $this->project;
