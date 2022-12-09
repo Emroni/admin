@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -28,6 +30,14 @@ class Task
 
     #[ORM\Column]
     private ?float $price = null;
+
+    #[ORM\OneToMany(mappedBy: 'task', targetEntity: Time::class)]
+    private Collection $times;
+
+    public function __construct()
+    {
+        $this->times = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,6 +105,36 @@ class Task
     public function setPrice(float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Time>
+     */
+    public function getTimes(): Collection
+    {
+        return $this->times;
+    }
+
+    public function addTime(Time $time): self
+    {
+        if (!$this->times->contains($time)) {
+            $this->times->add($time);
+            $time->setTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTime(Time $time): self
+    {
+        if ($this->times->removeElement($time)) {
+            // set the owning side to null (unless already changed)
+            if ($time->getTask() === $this) {
+                $time->setTask(null);
+            }
+        }
 
         return $this;
     }
