@@ -16,6 +16,7 @@
                         <th>Billing</th>
                         <th>Currency</th>
                         <th>Price</th>
+                        <th>Times</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,6 +29,7 @@
                             <td>{{ task.billing }}</td>
                             <td>{{ task.currency }}</td>
                             <td>{{ task.price }}</td>
+                            <td>{{ task.times|length }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
