@@ -136,11 +136,8 @@ class Task
 
     public function removeTime(Time $time): self
     {
-        if ($this->times->removeElement($time)) {
-            // set the owning side to null (unless already changed)
-            if ($time->getTask() === $this) {
-                $time->setTask(null);
-            }
+        if ($this->times->removeElement($time) && $time->getTask() === $this) {
+            $time->setTask(null);
         }
 
         return $this;

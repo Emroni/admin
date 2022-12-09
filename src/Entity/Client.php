@@ -104,11 +104,8 @@ class Client
 
     public function removeProject(Project $project): self
     {
-        if ($this->projects->removeElement($project)) {
-            // set the owning side to null (unless already changed)
-            if ($project->getClient() === $this) {
-                $project->setClient(null);
-            }
+        if ($this->projects->removeElement($project) && $project->getClient() === $this) {
+            $project->setClient(null);
         }
 
         return $this;
