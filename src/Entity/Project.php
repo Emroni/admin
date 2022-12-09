@@ -68,7 +68,7 @@ class Project
     {
         $clientName = $this->getClient()->getName();
 
-        return "{$clientName} - {$this->name}";
+        return "{$clientName} ‣ {$this->name}";
     }
 
     /**

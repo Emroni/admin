@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% set title = time.name %}
+
+{% block content %}
+	{% embed 'partials/card.html.twig' %}
+		{% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Edit', path:path('time_edit', {id:time.id})} %}
+		{% endblock %}
+		{% block body %}
+			<table class="table table-sm table-hover">
+				<tbody>
+					<tr>
+						<th>Task</th>
+						<td>
+                            <a href="{{ path('task_view', {id:time.task.id}) }}">{{ time.task.name }}</a>
+                        </td>
+					</tr>
+					<tr>
+						<th>Date</th>
+						<td>{{ time.date|date('Y-m-d') }}</td>
+					</tr>
+					<tr>
+						<th>Duration</th>
+						<td>{{ time.duration|date('H:i') }}</td>
+					</tr>
+				</tbody>
+			</table>
+		{% endblock %}
+	{% endembed %}
+{% endblock %}

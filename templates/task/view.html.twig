@@ -32,8 +32,36 @@
                         <th>Price</th>
                         <td>{{ task.price }}</td>
                     </tr>
+                    <tr>
+                        <th>Times</th>
+                        <td>{{ task.times|length}}</td>
+                    </tr>
 				</tbody>
 			</table>
 		{% endblock %}
 	{% endembed %}
+
+    {% embed 'partials/card.html.twig' with {title:task.times|length ~ ' Times'} %}
+        {% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Add', path:path('time_add', {task:task.id})} %}
+        {% endblock %}
+        {% block body %}
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for time in task.times %}
+                        <tr data-link="{{ path('time_view', {id:time.id}) }}">
+                            <td>{{ time.date|date('Y-m-d') }}</td>
+                            <td>{{ time.duration|date('H:i') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}
