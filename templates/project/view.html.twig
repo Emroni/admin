@@ -20,8 +20,40 @@
                             <a href="{{ path('client_view', {id:project.client.id}) }}">{{ project.client.name }}</a>
                         </td>
 					</tr>
+					<tr>
+						<th>Tasks</th>
+						<td>{{ project.tasks|length }}</td>
+					</tr>
 				</tbody>
 			</table>
 		{% endblock %}
 	{% endembed %}
+
+    {% embed 'partials/card.html.twig' with {title:project.tasks|length ~ ' Tasks'} %}
+        {% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Add', path:path('task_add', {project:project.id})} %}
+        {% endblock %}
+        {% block body %}
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Billing</th>
+                        <th>Currency</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in project.tasks %}
+                        <tr data-link="{{ path('task_view', {id:task.id}) }}">
+                            <td>{{ task.name }}</td>
+                            <td>{{ task.billing }}</td>
+                            <td>{{ task.currency }}</td>
+                            <td>{{ task.price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

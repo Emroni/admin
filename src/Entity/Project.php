@@ -37,7 +37,7 @@ class Project
 
     public function isDeletable(): ?bool
     {
-        return true;
+        return !$this->getTasks()->count();
     }
 
     public function getClient(): ?Client
