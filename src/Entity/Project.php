@@ -64,6 +64,13 @@ class Project
         return $this;
     }
 
+    public function getFullName(): ?string
+    {
+        $clientName = $this->getClient()->getName();
+
+        return "{$clientName} - {$this->name}";
+    }
+
     /**
      * @return Collection<int, Task>
      */

@@ -18,13 +18,20 @@ class TaskType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // Get entities
+        $task = $options['data'] ?? null;
+
         // Build form
         $builder
             ->add('name', TextType::class)
             ->add('project', EntityType::class, [
                 'class'         => Project::class,
-                'choice_label' => 'name',
-                'query_builder' => function (ProjectRepository $projectRepository) {
+                'choice_label' => 'fullName',
+                'query_builder' => function (ProjectRepository $projectRepository) use ($task) {
+                    if ($task) {
+                        $client = $task->getProject()->getClient();
+                        return $projectRepository->queryByClient($client);
+                    }
                     return $projectRepository->queryAll();
                 },
             ])
@@ -46,7 +53,6 @@ class TaskType extends AbstractType
             ->add('save', SubmitType::class);
 
         // Add delete
-        $task = $options['data'] ?? null;
         if ($task) {
             $builder->add('delete', SubmitType::class, [
                 'attr' => [

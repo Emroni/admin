@@ -41,11 +41,9 @@ class TaskRepository extends ServiceEntityRepository
 
     public function findAll()
     {
-        $orderBy = [
-            'name' => 'ASC',
-        ];
-
-        return $this->findBy([], $orderBy);
+        return $this->queryAll()
+            ->getQuery()
+            ->getResult();
     }
 
     public function queryAll()
