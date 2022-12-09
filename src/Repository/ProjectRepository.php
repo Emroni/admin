@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Client;
 use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -41,16 +42,24 @@ class ProjectRepository extends ServiceEntityRepository
 
     public function findAll()
     {
-        $orderBy = [
-            'name' => 'ASC',
-        ];
-
-        return $this->findBy([], $orderBy);
+        return $this->queryAll()
+            ->getQuery()
+            ->getResult();
     }
 
     public function queryAll()
     {
         return $this->createQueryBuilder('p')
             ->orderBy('p.name', 'ASC');
+    }
+
+    public function queryByClient(Client $client)
+    {
+        return $this->createQueryBuilder('p')
+            ->setParameter('clientId', $client->getId())
+            ->join('p.client', 'c')
+            ->where('c.id = :clientId')
+            ->orderBy('c.name', 'ASC')
+            ->addOrderBy('p.name', 'ASC');
     }
 }

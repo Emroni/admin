@@ -13,6 +13,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Client</th>
+                        <th>Tasks</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,6 +23,7 @@
                             <td>
                                 <a href="{{ path('client_view', {id:project.client.id}) }}">{{ project.client.name }}</a>
                             </td>
+                            <td>{{ project.tasks|length }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
