@@ -3,28 +3,28 @@
 namespace App\Form\Type;
 
 use App\Entity\Project;
-use App\Entity\Task;
+use App\Entity\Invoice;
 use App\Repository\ProjectRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TaskType extends AbstractType
+class InvoiceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // Get entities
-        $task = $options['data'] ?? null;
-        $project = $task->getProject();
+        $invoice = $options['data'] ?? null;
+        $project = $invoice->getProject();
 
         // Build form
         $builder
-            ->add('name', TextType::class)
             ->add('project', EntityType::class, [
                 'class'         => Project::class,
                 'choice_label' => 'fullName',
@@ -36,28 +36,30 @@ class TaskType extends AbstractType
                     return $projectRepository->queryAll();
                 },
             ])
-            ->add('billing', ChoiceType::class, [
-                'choices' => [
-                    'Fixed' => 'fixed',
-                    'Hourly' => 'hourly',
-                ],
-            ])
+            ->add('type', TextType::class)
             ->add('currency', ChoiceType::class, [
                 'choices' => [
                     'EUR' => 'EUR',
                     'USD' => 'USD',
                 ],
             ])
-            ->add('price', NumberType::class)
+            ->add('amount', NumberType::class)
+            ->add('sent_date', DateType::class, [
+                'widget' => 'single_text',
+            ])
+            ->add('paid_date', DateType::class, [
+                'required' => false,
+                'widget' => 'single_text',
+            ])
             ->add('save', SubmitType::class);
 
         // Add delete
-        if ($task) {
+        if ($invoice) {
             $builder->add('delete', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-danger',
-                    'data-confirm' => 'Are you sure you want to delete this Task?',
-                    'disabled' => !$task->isDeletable(),
+                    'data-confirm' => 'Are you sure you want to delete this Invoice?',
+                    'disabled' => !$invoice->isDeletable(),
                 ],
             ]);
         }
@@ -66,7 +68,7 @@ class TaskType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Task::class,
+            'data_class' => Invoice::class,
         ]);
     }
 }

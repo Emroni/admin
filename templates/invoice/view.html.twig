@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% set title = invoice.name %}
+
+{% block content %}
+	{% embed 'partials/card.html.twig' %}
+		{% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Edit', path:path('invoice_edit', {id:invoice.id})} %}
+		{% endblock %}
+		{% block body %}
+			<table class="table table-sm table-hover">
+				<tbody>
+					<tr>
+						<th>Name</th>
+						<td>{{ invoice.name }}</td>
+					</tr>
+					<tr>
+						<th>Project</th>
+						<td>
+                            <a href="{{ path('project_view', {id:invoice.project.id}) }}">{{ invoice.project.name }}</a>
+                        </td>
+					</tr>
+                    <tr>
+                        <th>Number</th>
+                        <td>{{ invoice.number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Currency</th>
+                        <td>{{ invoice.currency }}</td>
+                    </tr>
+                    <tr>
+                        <th>Amount</th>
+                        <td>{{ invoice.amount }}</td>
+                    </tr>
+                    <tr>
+                        <th>Sent Date</th>
+                        <td>{{ invoice.sentDate|date('Y-m-d') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Paid Date</th>
+                        <td>{{ invoice.paidDate ? invoice.paidDate|date('Y-m-d') : '' }}</td>
+                    </tr>
+				</tbody>
+			</table>
+		{% endblock %}
+	{% endembed %}
+{% endblock %}

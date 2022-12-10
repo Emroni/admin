@@ -41,6 +41,8 @@ class TaskController extends AbstractController
     {
         // Create task
         $task = new Task();
+        $task->setBilling('hourly');
+        $task->setCurrency('EUR');
 
         // Add project
         if ($request->get('project')) {

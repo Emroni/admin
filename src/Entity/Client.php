@@ -110,4 +110,22 @@ class Client
 
         return $this;
     }
+
+    /**
+     * @return ArrayCollection<int, Invoice>
+     */
+    public function getInvoices(): ArrayCollection
+    {
+        $invoices = [];
+
+        foreach ($this->getProjects() as $project) {
+            $invoices = array_merge($invoices, $project->getInvoices()->toArray());
+        }
+
+        usort($invoices, function ($a, $b) {
+            return $a->getId() < $b->getId() ? -1 : 1;
+        });
+
+        return new ArrayCollection($invoices);
+    }
 }

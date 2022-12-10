@@ -12,6 +12,7 @@
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Invoices</th>
                         <th>Projects</th>
                     </tr>
                 </thead>
@@ -19,6 +20,7 @@
                     {% for client in clients %}
                         <tr data-link="{{ path('client_view', {id:client.id}) }}">
                             <td>{{ client.name }}</td>
+                            <td>{{ client.invoices|length }}</td>
                             <td>{{ client.projects|length }}</td>
                         </tr>
                     {% endfor %}

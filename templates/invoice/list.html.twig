@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% set title = 'Invoices' %}
+
 {% block content %}
-    {% embed 'partials/card.html.twig' with {title:awaitingInvoices|length ~ ' Invoices'} %}
+    {% embed 'partials/card.html.twig' with {title:invoices|length ~ ' Invoices'} %}
+        {% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Add', path:path('invoice_add')} %}
+        {% endblock %}
         {% block body %}
             <table class="table table-sm table-hover">
                 <thead>
@@ -13,10 +18,11 @@
                         <th>Currency</th>
                         <th>Amount</th>
                         <th>Sent Date</th>
+                        <th>Paid Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for invoice in awaitingInvoices %}
+                    {% for invoice in invoices %}
                         <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
                             <td>{{ invoice.name }}</td>
                             <td>
@@ -27,6 +33,7 @@
                             <td>{{ invoice.currency }}</td>
                             <td>{{ invoice.amount }}</td>
                             <td>{{ invoice.sentDate|date('Y-m-d') }}</td>
+                            <td>{{ invoice.paidDate ? invoice.paidDate|date('Y-m-d') : '' }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
