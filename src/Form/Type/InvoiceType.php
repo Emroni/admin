@@ -2,7 +2,6 @@
 
 namespace App\Form\Type;
 
-use DateTime;
 use App\Entity\Project;
 use App\Entity\Invoice;
 use App\Repository\ProjectRepository;
@@ -43,11 +42,9 @@ class InvoiceType extends AbstractType
                     'EUR' => 'EUR',
                     'USD' => 'USD',
                 ],
-                'data' => 'EUR',
             ])
             ->add('amount', NumberType::class)
             ->add('sent_date', DateType::class, [
-                'data' => new DateTime(),
                 'widget' => 'single_text',
             ])
             ->add('paid_date', DateType::class, [

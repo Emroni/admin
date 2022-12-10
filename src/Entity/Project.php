@@ -122,11 +122,8 @@ class Project
 
     public function removeInvoice(Invoice $invoice): self
     {
-        if ($this->invoices->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
-            if ($invoice->getProject() === $this) {
-                $invoice->setProject(null);
-            }
+        if ($this->invoices->removeElement($invoice) && $invoice->getProject() === $this) {
+            $invoice->setProject(null);
         }
 
         return $this;

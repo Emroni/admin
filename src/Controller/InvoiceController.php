@@ -6,6 +6,7 @@ use App\Entity\Invoice;
 use App\Form\Type\InvoiceType;
 use App\Repository\ProjectRepository;
 use App\Repository\InvoiceRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,6 +42,8 @@ class InvoiceController extends AbstractController
     {
         // Create invoice
         $invoice = new Invoice();
+        $invoice->setCurrency('EUR');
+        $invoice->setSentDate(new DateTime());
 
         // Add project
         if ($request->get('project')) {

@@ -41,14 +41,12 @@ class TaskType extends AbstractType
                     'Fixed' => 'fixed',
                     'Hourly' => 'hourly',
                 ],
-                'data' => 'hourly',
             ])
             ->add('currency', ChoiceType::class, [
                 'choices' => [
                     'EUR' => 'EUR',
                     'USD' => 'USD',
                 ],
-                'data' => 'EUR',
             ])
             ->add('price', NumberType::class)
             ->add('save', SubmitType::class);
