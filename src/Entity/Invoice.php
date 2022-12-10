@@ -28,17 +28,39 @@ class Invoice
     private ?string $type = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $sent_date = null;
+    private ?\DateTimeInterface $sentDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $paid_date = null;
+    private ?\DateTimeInterface $paidDate = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $currency = null;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function isDeletable(): ?bool
+    {
+        return true;
+    }
+
+    public function getName(): string
+    {
+        $number = $this->getNumber();
+
+        return 'Invoice ' . $this->getId() . ($number ? " - {$number}" : '');
+    }
+
+    public function getFullName(): ?string
+    {
+        $projectFullName = $this->getProject()->getFullName();
+
+        return "{$projectFullName} › {$this->name}";
     }
 
     public function getProject(): ?Project
@@ -91,24 +113,24 @@ class Invoice
 
     public function getSentDate(): ?\DateTimeInterface
     {
-        return $this->sent_date;
+        return $this->sentDate;
     }
 
-    public function setSentDate(\DateTimeInterface $sent_date): self
+    public function setSentDate(\DateTimeInterface $sentDate): self
     {
-        $this->sent_date = $sent_date;
+        $this->sentDate = $sentDate;
 
         return $this;
     }
 
     public function getPaidDate(): ?\DateTimeInterface
     {
-        return $this->paid_date;
+        return $this->paidDate;
     }
 
-    public function setPaidDate(?\DateTimeInterface $paid_date): self
+    public function setPaidDate(?\DateTimeInterface $paidDate): self
     {
-        $this->paid_date = $paid_date;
+        $this->paidDate = $paidDate;
 
         return $this;
     }
@@ -121,6 +143,18 @@ class Invoice
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(string $currency): self
+    {
+        $this->currency = $currency;
 
         return $this;
     }
