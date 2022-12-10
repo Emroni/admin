@@ -51,4 +51,13 @@ class InvoiceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('i')
             ->orderBy('i.sentDate', 'DESC');
     }
+
+    public function findAwaiting()
+    {
+        return $this->findBy([
+            'paidDate' => null,
+        ], [
+            'sentDate' => 'DESC',
+        ]);
+    }
 }

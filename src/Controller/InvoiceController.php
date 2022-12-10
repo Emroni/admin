@@ -18,6 +18,7 @@ class InvoiceController extends AbstractController
 
     /** @var InvoiceRepository */
     private $invoiceRepository;
+    
     /** @var ProjectRepository */
     private $projectRepository;
 
