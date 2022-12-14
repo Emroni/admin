@@ -24,6 +24,14 @@
 						<th>Duration</th>
 						<td>{{ time.duration|date('H:i') }}</td>
 					</tr>
+					<tr>
+						<th>Invoice</th>
+						<td>
+                            {% if time.invoice %}
+                                <a href="{{ path('invoice_view', {id:time.invoice.id}) }}">{{ time.invoice.name }}</a>
+                            {% endif %}
+                        </td>
+					</tr>
 				</tbody>
 			</table>
 		{% endblock %}

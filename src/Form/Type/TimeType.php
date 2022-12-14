@@ -2,13 +2,13 @@
 
 namespace App\Form\Type;
 
+use App\Entity\Invoice;
 use App\Entity\Task;
 use App\Entity\Time;
+use App\Repository\InvoiceRepository;
 use App\Repository\TaskRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType as SymfonyTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -21,12 +21,13 @@ class TimeType extends AbstractType
     {
         // Get entities
         $time = $options['data'] ?? null;
+        $invoice = $time->getInvoice();
         $task = $time->getTask();
 
         // Build form
         $builder
             ->add('task', EntityType::class, [
-                'class'         => Task::class,
+                'class' => Task::class,
                 'choice_label' => 'fullName',
                 'query_builder' => function (TaskRepository $taskRepository) use ($task) {
                     if ($task) {
@@ -41,6 +42,18 @@ class TimeType extends AbstractType
             ])
             ->add('duration', SymfonyTimeType::class, [
                 'widget' => 'single_text',
+            ])
+            ->add('invoice', EntityType::class, [
+                'class' => Invoice::class,
+                'choice_label' => 'fullName',
+                'query_builder' => function (InvoiceRepository $invoiceRepository) use ($invoice) {
+                    if ($invoice) {
+                        $project = $invoice->getProject();
+                        return $invoiceRepository->queryByProject($project);
+                    }
+                    return $invoiceRepository->queryAll();
+                },
+                'required' => false,
             ])
             ->add('save', SubmitType::class);
 

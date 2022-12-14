@@ -14,6 +14,7 @@
                         <th>Task</th>
                         <th>Date</th>
                         <th>Duration</th>
+                        <th>Invoice</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,6 +25,7 @@
                             </td>
                             <td>{{ time.date|date('Y-m-d') }}</td>
                             <td>{{ time.duration|date('H:i') }}</td>
+                            <td>{{ time.invoice ? time.invoice.name : '' }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

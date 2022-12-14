@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Project;
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,6 +50,16 @@ class InvoiceRepository extends ServiceEntityRepository
     public function queryAll()
     {
         return $this->createQueryBuilder('i')
+            ->orderBy('i.sentDate', 'DESC');
+    }
+
+    public function queryByProject(Project $project)
+    {
+        return $this->createQueryBuilder('i')
+            ->setParameter('projectId', $project->getId())
+            ->join('i.project', 'p')
+            ->where('p.id = :projectId')
+            ->orderBy('p.name', 'ASC')
             ->orderBy('i.sentDate', 'DESC');
     }
 

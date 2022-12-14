@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\InvoiceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -38,6 +40,14 @@ class Invoice
 
     #[ORM\Column(length: 255)]
     private ?string $currency = null;
+
+    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: Time::class)]
+    private Collection $times;
+
+    public function __construct()
+    {
+        $this->times = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -153,6 +163,33 @@ class Invoice
     public function setCurrency(string $currency): self
     {
         $this->currency = $currency;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Time>
+     */
+    public function getTimes(): Collection
+    {
+        return $this->times;
+    }
+
+    public function addTime(Time $time): self
+    {
+        if (!$this->times->contains($time)) {
+            $this->times->add($time);
+            $time->setInvoice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTime(Time $time): self
+    {
+        if ($this->times->removeElement($time) && $time->getInvoice() === $this) {
+            $time->setInvoice(null);
+        }
 
         return $this;
     }

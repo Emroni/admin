@@ -24,6 +24,9 @@ class Time
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $duration = null;
 
+    #[ORM\ManyToOne(inversedBy: 'times')]
+    private ?Invoice $invoice = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -83,6 +86,18 @@ class Time
     public function setDuration(\DateTimeInterface $duration): self
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getInvoice(): ?Invoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(?Invoice $invoice): self
+    {
+        $this->invoice = $invoice;
 
         return $this;
     }
