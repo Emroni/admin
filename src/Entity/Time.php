@@ -48,9 +48,7 @@ class Time
 
     public function getFullName(): ?string
     {
-        $taskFullName = $this->getTask()->getFullName();
-
-        return "{$taskFullName} › {$this->name}";
+        return "{$this->getTask()->getFullName()} › {$this->getName()}";
     }
 
     public function getTask(): ?Task

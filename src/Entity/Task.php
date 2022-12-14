@@ -75,9 +75,7 @@ class Task
 
     public function getFullName(): ?string
     {
-        $projectFullName = $this->getProject()->getFullName();
-
-        return "{$projectFullName} ‣ {$this->name}";
+        return "{$this->getProject()->getFullName()} ‣ {$this->getName()}";
     }
 
     public function getBilling(): ?string
