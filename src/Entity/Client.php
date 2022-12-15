@@ -116,15 +116,17 @@ class Client
      */
     public function getInvoices(): ArrayCollection
     {
+        // TODO: Can this be a query?
+        
         $invoices = [];
 
         foreach ($this->getProjects() as $project) {
-            $invoices = array_merge($invoices, $project->getInvoices()->toArray());
+            foreach ($project->getInvoices() as $invoice) {
+                $invoices[$invoice->getId()] = $invoice;
+            }
         }
 
-        usort($invoices, function ($a, $b) {
-            return $a->getId() < $b->getId() ? -1 : 1;
-        });
+        ksort($invoices);
 
         return new ArrayCollection($invoices);
     }

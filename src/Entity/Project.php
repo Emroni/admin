@@ -96,4 +96,23 @@ class Project
         return $this;
     }
 
+    /**
+     * @return ArrayCollection<int, Invoice>
+     */
+    public function getInvoices(): ArrayCollection
+    {
+        // TODO: Can this be a query?
+
+        $invoices = [];
+
+        foreach ($this->getTasks() as $task) {
+            foreach ($task->getInvoices() as $invoice) {
+                $invoices[$invoice->getId()] = $invoice;
+            }
+        }
+
+        ksort($invoices);
+
+        return new ArrayCollection($invoices);
+    }
 }
