@@ -16,10 +16,6 @@ class Invoice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Project $project = null;
-
     #[ORM\Column(nullable: true)]
     private ?int $number = null;
 
@@ -68,19 +64,7 @@ class Invoice
 
     public function getFullName(): ?string
     {
-        return "{$this->getProject()->getFullName()} › {$this->getName()}";
-    }
-
-    public function getProject(): ?Project
-    {
-        return $this->project;
-    }
-
-    public function setProject(?Project $project): self
-    {
-        $this->project = $project;
-
-        return $this;
+        return "PROJECTS › {$this->getName()}";
     }
 
     public function getNumber(): ?int

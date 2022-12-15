@@ -25,13 +25,9 @@ class Project
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Task::class)]
     private Collection $tasks;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Invoice::class)]
-    private Collection $invoices;
-
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
-        $this->invoices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,30 +96,4 @@ class Project
         return $this;
     }
 
-    /**
-     * @return Collection<int, Invoice>
-     */
-    public function getInvoices(): Collection
-    {
-        return $this->invoices;
-    }
-
-    public function addInvoice(Invoice $invoice): self
-    {
-        if (!$this->invoices->contains($invoice)) {
-            $this->invoices->add($invoice);
-            $invoice->setProject($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvoice(Invoice $invoice): self
-    {
-        if ($this->invoices->removeElement($invoice) && $invoice->getProject() === $this) {
-            $invoice->setProject(null);
-        }
-
-        return $this;
-    }
 }
