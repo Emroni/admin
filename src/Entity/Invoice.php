@@ -177,4 +177,42 @@ class Invoice
 
         return $this;
     }
+    
+    /**
+     * @return ArrayCollection<int, Task>
+     */
+    public function getTasks(): ArrayCollection
+    {
+        // TODO: Can this be a query?
+        
+        $tasks = [];
+
+        foreach ($this->getTimes() as $time) {
+            $task = $time->getTask();
+            $tasks[$task->getId()] = $task;
+        }
+
+        ksort($tasks);
+
+        return new ArrayCollection($tasks);
+    }
+    
+    /**
+     * @return ArrayCollection<int, Project>
+     */
+    public function getProjects(): ArrayCollection
+    {
+        // TODO: Can this be a query?
+        
+        $projects = [];
+
+        foreach ($this->getTasks() as $task) {
+            $project = $task->getProject();
+            $projects[$project->getId()] = $project;
+        }
+
+        ksort($projects);
+
+        return new ArrayCollection($projects);
+    }
 }

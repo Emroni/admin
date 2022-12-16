@@ -68,7 +68,7 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Project</th>
+                        <th>Projects</th>
                         <th>Number</th>
                         <th>Type</th>
                         <th>Currency</th>
@@ -82,7 +82,9 @@
                         <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
                             <td>{{ invoice.name }}</td>
                             <td>
-                                {# <a href="{{ path('project_view', {id:invoice.project.id}) }}">{{ invoice.project.name }}</a> #}
+                                {% for project in invoice.projects %}
+                                    <a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
+                                {% endfor %}
                             </td>
                             <td>{{ invoice.number }}</td>
                             <td>{{ invoice.type }}</td>
