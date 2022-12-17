@@ -2,8 +2,10 @@
 
 namespace App\Form\Type;
 
+use App\Entity\Client;
 use App\Entity\Invoice;
 use App\Entity\Time;
+use App\Repository\ClientRepository;
 use App\Repository\TimeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -17,11 +19,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InvoiceType extends AbstractType
 {
+    /** @var ClientRepository */
+    private $clientRepository;
+
     /** @var TimeRepository */
     private $timeRepository;
 
-    public function __construct(TimeRepository $timeRepository)
+    public function __construct(ClientRepository $clientRepository, TimeRepository $timeRepository)
     {
+        $this->clientRepository = $clientRepository;
         $this->timeRepository = $timeRepository;
     }
 
@@ -42,6 +48,11 @@ class InvoiceType extends AbstractType
 
         // Build form
         $builder
+            ->add('client', EntityType::class, [
+                'choices' => $this->clientRepository->findAll(),
+                'choice_label' => 'name',
+                'class' => Client::class,
+            ])
             ->add('type', TextType::class)
             ->add('currency', ChoiceType::class, [
                 'choices' => [

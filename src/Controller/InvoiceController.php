@@ -66,12 +66,15 @@ class InvoiceController extends AbstractController
         if ($request->get('client'))  {
             $client = $this->clientRepository->find($request->get('client'));
             $times = $this->timeRepository->findBillableByClient($client);
+            $invoice->setClient($client);
         } elseif ($request->get('project'))  {
             $project = $this->projectRepository->find($request->get('project'));
             $times = $this->timeRepository->findBillableByProject($project);
+            $invoice->setClient($project->getClient());
         } elseif ($request->get('task'))  {
             $task = $this->taskRepository->find($request->get('task'));
             $times = $this->timeRepository->findBillableByTask($task);
+            $invoice->setClient($task->getProject()->getClient());
         }
         foreach ($times as $time) {
             $invoice->addTime($time);

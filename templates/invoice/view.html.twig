@@ -15,9 +15,17 @@
 						<td>{{ invoice.name }}</td>
 					</tr>
 					<tr>
-						<th>Project</th>
+						<th>Client</th>
 						<td>
-                            {# <a href="{{ path('project_view', {id:invoice.project.id}) }}">{{ invoice.project.name }}</a> #}
+                            <a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>
+                        </td>
+					</tr>
+					<tr>
+						<th>Projects</th>
+						<td>
+                            {% for project in invoice.projects %}
+                                <a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
+                            {% endfor %}
                         </td>
 					</tr>
                     <tr>

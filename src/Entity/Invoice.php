@@ -38,7 +38,13 @@ class Invoice
     private ?string $currency = null;
 
     #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: Time::class)]
+    #[ORM\OrderBy(['date' => 'DESC'])]
     private Collection $times;
+
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OrderBy(['id' => 'DESC'])]
+    private ?Client $client = null;
 
     public function __construct()
     {
@@ -64,7 +70,7 @@ class Invoice
 
     public function getFullName(): ?string
     {
-        return "PROJECTS › {$this->getName()}";
+        return "{$this->getClient()->getName()} › {$this->getName()}";
     }
 
     public function getNumber(): ?int
@@ -214,5 +220,17 @@ class Invoice
         ksort($projects);
 
         return new ArrayCollection($projects);
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+
+        return $this;
     }
 }
