@@ -42,25 +42,9 @@ class InvoiceRepository extends ServiceEntityRepository
 
     public function findAll()
     {
-        return $this->queryAll()
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function queryAll()
-    {
-        return $this->createQueryBuilder('invoice')
-            ->orderBy('invoice.id', 'DESC');
-    }
-
-    public function queryByProject(Project $project)
-    {
-        return $this->createQueryBuilder('invoice')
-            ->setParameter('project', $project)
-            ->join('invoice.project', 'project')
-            ->where('project = :project')
-            ->orderBy('project.name', 'ASC')
-            ->orderBy('invoice.id', 'DESC');
+        return $this->findBy([], [
+            'id' => 'DESC',
+        ]);
     }
 
     public function findAwaiting()
