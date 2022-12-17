@@ -83,19 +83,9 @@ class InvoiceController extends AbstractController
             $invoice->addTime($time);
         }
 
-        // Add amount
-        $amount = array_reduce($times, function ($carry, $time) {
-            return $carry + $time->getPrice();
-        }, 0);
-        $invoice->setAmount($amount);
-
-        // Add type
-        if ($client) {
-            $lastInvoice = $client->getInvoices()->first();
-            if ($lastInvoice) {
-                $invoice->setType($lastInvoice->getType());
-            }
-        }
+        // Set amount and type
+        $invoice->updateAmount();
+        $invoice->updateType();
 
         // Create form
         $form = $this->createForm(InvoiceType::class, $invoice);

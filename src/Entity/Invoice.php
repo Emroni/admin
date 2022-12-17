@@ -97,6 +97,16 @@ class Invoice
         return $this;
     }
 
+    public function updateAmount(): float
+    {
+        $times = $this->getTimes()->toArray();
+        $amount = array_reduce($times, function ($carry, $time) {
+            return $carry + $time->getPrice();
+        }, 0);
+        $this->setAmount($amount);
+        return $amount;
+    }
+
     public function getType(): ?string
     {
         return $this->type;
@@ -107,6 +117,20 @@ class Invoice
         $this->type = $type;
 
         return $this;
+    }
+
+    public function updateType(): ?string
+    {
+        $client = $this->getClient();
+        if ($client) {
+            $lastInvoice = $client->getInvoices()->first();
+            if ($lastInvoice) {
+                $type = $lastInvoice->getType();
+                $this->setType($type);
+                return $type;
+            }
+        }
+        return null;
     }
 
     public function getSentDate(): ?\DateTimeInterface
