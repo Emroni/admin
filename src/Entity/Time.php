@@ -101,4 +101,23 @@ class Time
 
         return $this;
     }
+
+    public function getHours(): float
+    {
+        $duration = $this->getDuration();
+
+        return (int) $duration->format('H') + ((int) $duration->format('i') / 60);
+    }
+
+    public function getPrice(): float
+    {
+        $task = $this->getTask();
+        $price = $task->getPrice();
+
+        if ($task->isBilling('hourly')) {
+            return $this->getHours() * $price;
+        }
+
+        return $price;
+    }
 }

@@ -89,6 +89,11 @@ class Task
 
         return $this;
     }
+    
+    public function isBilling(string $billing): bool
+    {
+        return $this->getBilling() === $billing;
+    }
 
     public function getCurrency(): ?string
     {

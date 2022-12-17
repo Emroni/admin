@@ -80,6 +80,12 @@ class InvoiceController extends AbstractController
             $invoice->addTime($time);
         }
 
+        // Add amount
+        $amount = array_reduce($times, function ($carry, $time) {
+            return $carry + $time->getPrice();
+        }, 0);
+        $invoice->setAmount($amount);
+
         // Create form
         $form = $this->createForm(InvoiceType::class, $invoice);
         $form->handleRequest($request);
