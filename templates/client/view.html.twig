@@ -61,7 +61,7 @@
 
     {% embed 'partials/card.html.twig' with {title:client.invoices|length ~ ' Invoices'} %}
         {% block actions %}
-            {% include 'partials/link.html.twig' with {name:'Add', path:path('invoice_add')} %}
+            {% include 'partials/link.html.twig' with {name:'Add', path:path('invoice_add', {client:client.id})} %}
         {% endblock %}
         {% block body %}
             <table class="table table-sm table-hover">

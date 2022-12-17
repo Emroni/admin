@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Invoice;
 use App\Form\Type\InvoiceType;
-use App\Repository\ProjectRepository;
+use App\Repository\ClientRepository;
 use App\Repository\InvoiceRepository;
+use App\Repository\ProjectRepository;
+use App\Repository\TaskRepository;
+use App\Repository\TimeRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\SubmitButton;
@@ -16,16 +19,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class InvoiceController extends AbstractController
 {
 
+    /** @var ClientRepository */
+    private $clientRepository;
+
     /** @var InvoiceRepository */
     private $invoiceRepository;
     
     /** @var ProjectRepository */
     private $projectRepository;
+    
+    /** @var TaskRepository */
+    private $taskRepository;
+    
+    /** @var TimeRepository */
+    private $timeRepository;
 
-    public function __construct(InvoiceRepository $invoiceRepository, ProjectRepository $projectRepository)
+    public function __construct(ClientRepository $clientRepository, InvoiceRepository $invoiceRepository, ProjectRepository $projectRepository, TaskRepository $taskRepository, TimeRepository $timeRepository)
     {
+        $this->clientRepository = $clientRepository;
         $this->invoiceRepository = $invoiceRepository;
         $this->projectRepository = $projectRepository;
+        $this->taskRepository = $taskRepository;
+        $this->timeRepository = $timeRepository;
     }
 
     #[Route('/invoice', name: 'invoice_list')]
@@ -46,10 +61,20 @@ class InvoiceController extends AbstractController
         $invoice->setCurrency('EUR');
         $invoice->setSentDate(new DateTime());
 
-        // Add project
-        if ($request->get('project')) {
+        // Add times
+        $times = [];
+        if ($request->get('client'))  {
+            $client = $this->clientRepository->find($request->get('client'));
+            $times = $this->timeRepository->findBillableByClient($client);
+        } elseif ($request->get('project'))  {
             $project = $this->projectRepository->find($request->get('project'));
-            $invoice->setProject($project);
+            $times = $this->timeRepository->findBillableByProject($project);
+        } elseif ($request->get('task'))  {
+            $task = $this->taskRepository->find($request->get('task'));
+            $times = $this->timeRepository->findBillableByTask($task);
+        }
+        foreach ($times as $time) {
+            $invoice->addTime($time);
         }
 
         // Create form
