@@ -62,6 +62,7 @@ class InvoiceController extends AbstractController
         $invoice->setSentDate(new DateTime());
 
         // Add times
+        $client = null;
         $times = [];
         if ($request->get('client'))  {
             $client = $this->clientRepository->find($request->get('client'));
@@ -69,12 +70,14 @@ class InvoiceController extends AbstractController
             $invoice->setClient($client);
         } elseif ($request->get('project'))  {
             $project = $this->projectRepository->find($request->get('project'));
+            $client = $project->getClient();
+            $invoice->setClient($client);
             $times = $this->timeRepository->findBillableByProject($project);
-            $invoice->setClient($project->getClient());
         } elseif ($request->get('task'))  {
             $task = $this->taskRepository->find($request->get('task'));
+            $client = $task->getProject()->getClient();
+            $invoice->setClient($client);
             $times = $this->timeRepository->findBillableByTask($task);
-            $invoice->setClient($task->getProject()->getClient());
         }
         foreach ($times as $time) {
             $invoice->addTime($time);
@@ -85,6 +88,14 @@ class InvoiceController extends AbstractController
             return $carry + $time->getPrice();
         }, 0);
         $invoice->setAmount($amount);
+
+        // Add type
+        if ($client) {
+            $lastInvoice = $client->getInvoices()->first();
+            if ($lastInvoice) {
+                $invoice->setType($lastInvoice->getType());
+            }
+        }
 
         // Create form
         $form = $this->createForm(InvoiceType::class, $invoice);
