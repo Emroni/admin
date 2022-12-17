@@ -64,16 +64,16 @@ class InvoiceController extends AbstractController
         // Add times
         $client = null;
         $times = [];
-        if ($request->get('client'))  {
+        if ($request->get('client')) {
             $client = $this->clientRepository->find($request->get('client'));
             $times = $this->timeRepository->findBillableByClient($client);
             $invoice->setClient($client);
-        } elseif ($request->get('project'))  {
+        } elseif ($request->get('project')) {
             $project = $this->projectRepository->find($request->get('project'));
             $client = $project->getClient();
             $invoice->setClient($client);
             $times = $this->timeRepository->findBillableByProject($project);
-        } elseif ($request->get('task'))  {
+        } elseif ($request->get('task')) {
             $task = $this->taskRepository->find($request->get('task'));
             $client = $task->getProject()->getClient();
             $invoice->setClient($client);
@@ -172,6 +172,22 @@ class InvoiceController extends AbstractController
         return $this->render('partials/form.html.twig', [
             'form' => $form,
             'formTitle' => 'Edit ' . $invoice->getName(),
+        ]);
+    }
+
+    #[Route('/invoice/{id}/paid', name: 'invoice_paid')]
+    public function paid(int $id): Response
+    {
+        // Update invoice
+        $invoice = $this->invoiceRepository->find($id);
+        $invoice->setPaidDate(new DateTime());
+        $this->invoiceRepository->save($invoice, true);
+
+        // Add notification
+        $this->addFlash('success', "Marked Invoice <b>{$invoice->getName()}</b> as paid");
+
+        return $this->render('invoice/view.html.twig', [
+            'invoice' => $invoice,
         ]);
     }
 }
