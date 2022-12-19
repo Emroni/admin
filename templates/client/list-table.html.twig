@@ -1,0 +1,25 @@
+{% embed 'partials/card.html.twig' with {title:clients|length ~ ' Clients'} %}
+    {% block actions %}
+        {% include 'partials/link.html.twig' with {name:'Add', path:path('client_add')} %}
+    {% endblock %}
+    {% block body %}
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Invoices</th>
+                    <th>Projects</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                    <tr data-link="{{ path('client_view', {id:client.id}) }}">
+                        <td>{{ client.name }}</td>
+                        <td>{{ client.invoices|length }}</td>
+                        <td>{{ client.projects|length }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}
+{% endembed %}

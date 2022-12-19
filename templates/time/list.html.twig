@@ -3,33 +3,5 @@
 {% set title = 'Times' %}
 
 {% block content %}
-    {% embed 'partials/card.html.twig' with {title:times|length ~ ' Times'} %}
-        {% block actions %}
-            {% include 'partials/link.html.twig' with {name:'Add', path:path('time_add')} %}
-        {% endblock %}
-        {% block body %}
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Task</th>
-                        <th>Date</th>
-                        <th>Duration</th>
-                        <th>Invoice</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for time in times %}
-                        <tr data-link="{{ path('time_view', {id:time.id}) }}">
-                            <td>
-                                <a href="{{ path('task_view', {id:time.task.id}) }}">{{ time.task.name }}</a>
-                            </td>
-                            <td>{{ time.date|date('Y-m-d') }}</td>
-                            <td>{{ time.duration|date('H:i') }}</td>
-                            <td>{{ time.invoice ? time.invoice.name : '' }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endblock %}
-    {% endembed %}
+    {% include 'time/list-table.html.twig' %}
 {% endblock %}

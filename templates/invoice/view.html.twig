@@ -5,8 +5,8 @@
 {% block content %}
 	{% embed 'partials/card.html.twig' %}
 		{% block actions %}
-            {% include 'partials/link.html.twig' with {name:'Paid', path:path('invoice_paid', {id:invoice.id}), disabled:invoice.paidDate} %}
-            {% include 'partials/link.html.twig' with {name:'Edit', path:path('invoice_edit', {id:invoice.id})} %}
+			{% include 'partials/link.html.twig' with {name:'Paid', path:path('invoice_paid', {id:invoice.id}), disabled:invoice.paidDate} %}
+			{% include 'partials/link.html.twig' with {name:'Edit', path:path('invoice_edit', {id:invoice.id})} %}
 		{% endblock %}
 		{% block body %}
 			<table class="table table-sm table-hover">
@@ -18,67 +18,41 @@
 					<tr>
 						<th>Client</th>
 						<td>
-                            <a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>
-                        </td>
+							<a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>
+						</td>
 					</tr>
 					<tr>
 						<th>Projects</th>
 						<td>
-                            {% for project in invoice.projects %}
-                                <a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
-                            {% endfor %}
-                        </td>
+							{% for project in invoice.projects %}
+								<a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
+							{% endfor %}
+						</td>
 					</tr>
-                    <tr>
-                        <th>Number</th>
-                        <td>{{ invoice.number }}</td>
-                    </tr>
-                    <tr>
-                        <th>Currency</th>
-                        <td>{{ invoice.currency }}</td>
-                    </tr>
-                    <tr>
-                        <th>Amount</th>
-                        <td>{{ invoice.amount }}</td>
-                    </tr>
-                    <tr>
-                        <th>Sent Date</th>
-                        <td>{{ invoice.sentDate|date('Y-m-d') }}</td>
-                    </tr>
-                    <tr>
-                        <th>Paid Date</th>
-                        <td>{{ invoice.paidDate ? invoice.paidDate|date('Y-m-d') : '' }}</td>
-                    </tr>
+					<tr>
+						<th>Number</th>
+						<td>{{ invoice.number }}</td>
+					</tr>
+					<tr>
+						<th>Currency</th>
+						<td>{{ invoice.currency }}</td>
+					</tr>
+					<tr>
+						<th>Amount</th>
+						<td>{{ invoice.amount }}</td>
+					</tr>
+					<tr>
+						<th>Sent Date</th>
+						<td>{{ invoice.sentDate|date('Y-m-d') }}</td>
+					</tr>
+					<tr>
+						<th>Paid Date</th>
+						<td>{{ invoice.paidDate ? invoice.paidDate|date('Y-m-d') : '' }}</td>
+					</tr>
 				</tbody>
 			</table>
 		{% endblock %}
 	{% endembed %}
 
-    {% embed 'partials/card.html.twig' with {title:invoice.times|length ~ ' Times'} %}
-        {% block actions %}
-            {% include 'partials/link.html.twig' with {name:'Add', path:path('time_add')} %}
-        {% endblock %}
-        {% block body %}
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Task</th>
-                        <th>Date</th>
-                        <th>Duration</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for time in invoice.times %}
-                        <tr data-link="{{ path('time_view', {id:time.id}) }}">
-                            <td>
-                                <a href="{{ path('task_view', {id:time.task.id}) }}">{{ time.task.name }}</a>
-                            </td>
-                            <td>{{ time.date|date('Y-m-d') }}</td>
-                            <td>{{ time.duration|date('H:i') }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endblock %}
-    {% endembed %}
+	{% include 'time/list-table.html.twig' with {times:invoice.times} %}
 {% endblock %}
