@@ -1,56 +1,63 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    {% embed 'partials/card.html.twig' with {title:awaitingInvoices|length ~ ' Invoices'} %}
-        {% block body %}
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Client</th>
-                        <th>Projects</th>
-                        <th>Type</th>
-                        <th>Currency</th>
-                        <th>Amount</th>
-                        <th>Sent Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for invoice in awaitingInvoices %}
-                        <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
-                            <td>
-                                <a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>
-                            </td>
-                            <td>
-                                {% for project in invoice.projects %}
-                                    <a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
-                                {% endfor %}
-                            </td>
-                            <td>{{ invoice.type }}</td>
-                            <td>{{ invoice.currency }}</td>
-                            <td>{{ invoice.amount }}</td>
-                            <td>{{ invoice.sentDate|date('Y-m-d') }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                <tbody>
-                    {% for invoice in billableInvoices %}
-                        <tr data-link="{{ path('invoice_add', {client:invoice.client.id}) }}">
-                            <td>
-                                <a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>
-                            </td>
-                            <td>
-                                {% for project in invoice.projects %}
-                                    <a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
-                                {% endfor %}
-                            </td>
-                            <td>{{ invoice.type }}</td>
-                            <td>{{ invoice.currency }}</td>
-                            <td>{{ invoice.amount }}</td>
-                            <td></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endblock %}
-    {% endembed %}
+	{% embed 'partials/card.html.twig' with {title:awaitingInvoices|length ~ ' Invoices'} %}
+		{% block body %}
+			<table class="table table-sm table-hover">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Client</th>
+						<th>Projects</th>
+						<th>Type</th>
+						<th>Currency</th>
+						<th>Amount</th>
+						<th>Sent Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for invoice in awaitingInvoices %}
+						<tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
+							<td>
+								<span class="bg-primary d-inline-block p-1 rounded"></span>
+							</td>
+							<td>
+								<a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>
+							</td>
+							<td>
+								{% for project in invoice.projects %}
+									<a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
+								{% endfor %}
+							</td>
+							<td>{{ invoice.type }}</td>
+							<td>{{ invoice.currency }}</td>
+							<td>{{ invoice.amount }}</td>
+							<td>{{ invoice.sentDate|date('Y-m-d') }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+				<tbody>
+					{% for invoice in billableInvoices %}
+						<tr data-link="{{ path('invoice_add', {client:invoice.client.id}) }}">
+							<td>
+								<span class="bg-warning d-inline-block p-1 rounded"></span>
+							</td>
+							<td>
+								<a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>
+							</td>
+							<td>
+								{% for project in invoice.projects %}
+									<a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
+								{% endfor %}
+							</td>
+							<td>{{ invoice.type }}</td>
+							<td>{{ invoice.currency }}</td>
+							<td>{{ invoice.amount }}</td>
+							<td></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endblock %}
+	{% endembed %}
 {% endblock %}

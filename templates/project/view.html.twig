@@ -33,40 +33,6 @@
 		{% endblock %}
 	{% endembed %}
 
-    {% embed 'partials/card.html.twig' with {title:project.invoices|length ~ ' Invoices'} %}
-        {% block actions %}
-            {% include 'partials/link.html.twig' with {name:'Add', path:path('invoice_add', {project:project.id})} %}
-        {% endblock %}
-        {% block body %}
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Number</th>
-                        <th>Type</th>
-                        <th>Currency</th>
-                        <th>Amount</th>
-                        <th>Sent Date</th>
-                        <th>Paid Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for invoice in project.invoices %}
-                        <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
-                            <td>{{ invoice.name }}</td>
-                            <td>{{ invoice.number }}</td>
-                            <td>{{ invoice.type }}</td>
-                            <td>{{ invoice.currency }}</td>
-                            <td>{{ invoice.amount }}</td>
-                            <td>{{ invoice.sentDate|date('Y-m-d') }}</td>
-                            <td>{{ invoice.paidDate ? invoice.paidDate|date('Y-m-d') : '' }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endblock %}
-    {% endembed %}
-
     {% embed 'partials/card.html.twig' with {title:project.tasks|length ~ ' Tasks'} %}
         {% block actions %}
             {% include 'partials/link.html.twig' with {name:'Add', path:path('task_add', {project:project.id})} %}
@@ -88,6 +54,44 @@
                             <td>{{ task.billing }}</td>
                             <td>{{ task.currency }}</td>
                             <td>{{ task.price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
+
+    {% embed 'partials/card.html.twig' with {title:project.invoices|length ~ ' Invoices'} %}
+        {% block actions %}
+            {% include 'partials/link.html.twig' with {name:'Add', path:path('invoice_add', {project:project.id})} %}
+        {% endblock %}
+        {% block body %}
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Number</th>
+                        <th>Type</th>
+                        <th>Currency</th>
+                        <th>Amount</th>
+                        <th>Sent Date</th>
+                        <th>Paid Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in project.invoices %}
+                        <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
+							<td>
+								<span class="bg-{{ invoice.paidDate ? 'success' : 'primary' }} d-inline-block p-1 rounded"></span>
+							</td>
+                            <td>{{ invoice.name }}</td>
+                            <td>{{ invoice.number }}</td>
+                            <td>{{ invoice.type }}</td>
+                            <td>{{ invoice.currency }}</td>
+                            <td>{{ invoice.amount }}</td>
+                            <td>{{ invoice.sentDate|date('Y-m-d') }}</td>
+                            <td>{{ invoice.paidDate ? invoice.paidDate|date('Y-m-d') : '' }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

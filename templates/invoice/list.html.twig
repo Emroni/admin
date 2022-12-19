@@ -11,6 +11,7 @@
             <table class="table table-sm table-hover">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Name</th>
                         <th>Client</th>
                         <th>Projects</th>
@@ -24,6 +25,9 @@
                 <tbody>
                     {% for invoice in invoices %}
                         <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
+							<td>
+								<span class="bg-{{ invoice.paidDate ? 'success' : 'primary' }} d-inline-block p-1 rounded"></span>
+							</td>
                             <td>{{ invoice.name }}</td>
                             <td>
                                 <a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>

@@ -32,6 +32,7 @@ class Task
     private ?float $price = null;
 
     #[ORM\OneToMany(mappedBy: 'task', targetEntity: Time::class)]
+    #[ORM\OrderBy(['date' => 'DESC'])]
     private Collection $times;
 
     public function __construct()
@@ -162,7 +163,7 @@ class Task
             }
         }
 
-        ksort($invoices);
+        krsort($invoices);
 
         return new ArrayCollection($invoices);
     }

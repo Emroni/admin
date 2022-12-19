@@ -53,6 +53,7 @@
             <table class="table table-sm table-hover">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Name</th>
                         <th>Number</th>
                         <th>Type</th>
@@ -65,6 +66,9 @@
                 <tbody>
                     {% for invoice in task.invoices %}
                         <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
+							<td>
+								<span class="bg-{{ invoice.paidDate ? 'success' : 'primary' }} d-inline-block p-1 rounded"></span>
+							</td>
                             <td>{{ invoice.name }}</td>
                             <td>{{ invoice.number }}</td>
                             <td>{{ invoice.type }}</td>

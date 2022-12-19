@@ -23,6 +23,7 @@ class Project
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Task::class)]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $tasks;
 
     public function __construct()
@@ -111,7 +112,7 @@ class Project
             }
         }
 
-        ksort($invoices);
+        krsort($invoices);
 
         return new ArrayCollection($invoices);
     }
