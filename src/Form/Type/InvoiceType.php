@@ -53,6 +53,7 @@ class InvoiceType extends AbstractType
                 'choice_label' => 'name',
                 'class' => Client::class,
             ])
+            ->add('number', NumberType::class)
             ->add('type', TextType::class)
             ->add('currency', ChoiceType::class, [
                 'choices' => [

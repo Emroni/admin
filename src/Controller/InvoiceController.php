@@ -61,6 +61,11 @@ class InvoiceController extends AbstractController
         $invoice->setCurrency('EUR');
         $invoice->setSentDate(new DateTime());
 
+        // Add number
+        $lastInvoice = $this->invoiceRepository->findLast();
+        $number = $lastInvoice->getNumber() + 1;
+        $invoice->setNumber($number);
+
         // Add times
         $client = null;
         $times = [];

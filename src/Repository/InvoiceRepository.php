@@ -47,6 +47,13 @@ class InvoiceRepository extends ServiceEntityRepository
         ]);
     }
 
+    public function findLast()
+    {
+        return $this->findOneBy([], [
+            'id' => 'DESC',
+        ]);
+    }
+
     public function findAwaiting()
     {
         return $this->findBy([
