@@ -42,25 +42,16 @@ class InvoiceRepository extends ServiceEntityRepository
 
     public function findAll()
     {
-        return $this->queryAll()
-            ->getQuery()
-            ->getResult();
+        return $this->findBy([], [
+            'id' => 'DESC',
+        ]);
     }
 
-    public function queryAll()
+    public function findLast()
     {
-        return $this->createQueryBuilder('i')
-            ->orderBy('i.sentDate', 'DESC');
-    }
-
-    public function queryByProject(Project $project)
-    {
-        return $this->createQueryBuilder('i')
-            ->setParameter('projectId', $project->getId())
-            ->join('i.project', 'p')
-            ->where('p.id = :projectId')
-            ->orderBy('p.name', 'ASC')
-            ->orderBy('i.sentDate', 'DESC');
+        return $this->findOneBy([], [
+            'id' => 'DESC',
+        ]);
     }
 
     public function findAwaiting()
@@ -68,7 +59,7 @@ class InvoiceRepository extends ServiceEntityRepository
         return $this->findBy([
             'paidDate' => null,
         ], [
-            'sentDate' => 'DESC',
+            'id' => 'DESC',
         ]);
     }
 }

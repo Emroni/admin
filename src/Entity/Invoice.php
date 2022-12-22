@@ -16,10 +16,6 @@ class Invoice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Project $project = null;
-
     #[ORM\Column(nullable: true)]
     private ?int $number = null;
 
@@ -42,7 +38,13 @@ class Invoice
     private ?string $currency = null;
 
     #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: Time::class)]
+    #[ORM\OrderBy(['date' => 'DESC'])]
     private Collection $times;
+
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OrderBy(['id' => 'DESC'])]
+    private ?Client $client = null;
 
     public function __construct()
     {
@@ -68,19 +70,7 @@ class Invoice
 
     public function getFullName(): ?string
     {
-        return "{$this->getProject()->getFullName()} › {$this->getName()}";
-    }
-
-    public function getProject(): ?Project
-    {
-        return $this->project;
-    }
-
-    public function setProject(?Project $project): self
-    {
-        $this->project = $project;
-
-        return $this;
+        return "{$this->getClient()->getName()} › {$this->getName()}";
     }
 
     public function getNumber(): ?int
@@ -107,6 +97,16 @@ class Invoice
         return $this;
     }
 
+    public function updateAmount(): float
+    {
+        $times = $this->getTimes()->toArray();
+        $amount = array_reduce($times, function ($carry, $time) {
+            return $carry + $time->getPrice();
+        }, 0);
+        $this->setAmount($amount);
+        return $amount;
+    }
+
     public function getType(): ?string
     {
         return $this->type;
@@ -117,6 +117,20 @@ class Invoice
         $this->type = $type;
 
         return $this;
+    }
+
+    public function updateType(): ?string
+    {
+        $client = $this->getClient();
+        if ($client) {
+            $lastInvoice = $client->getInvoices()->first();
+            if ($lastInvoice) {
+                $type = $lastInvoice->getType();
+                $this->setType($type);
+                return $type;
+            }
+        }
+        return null;
     }
 
     public function getSentDate(): ?\DateTimeInterface
@@ -192,5 +206,98 @@ class Invoice
         }
 
         return $this;
+    }
+    
+    /**
+     * @return ArrayCollection<int, Task>
+     */
+    public function getTasks(): ArrayCollection
+    {
+        // TODO: Can this be a query?
+        
+        $tasks = [];
+
+        foreach ($this->getTimes() as $time) {
+            $task = $time->getTask();
+            $tasks[$task->getId()] = $task;
+        }
+
+        ksort($tasks);
+
+        return new ArrayCollection($tasks);
+    }
+    
+    /**
+     * @return ArrayCollection<int, Project>
+     */
+    public function getProjects(): ArrayCollection
+    {
+        // TODO: Can this be a query?
+        
+        $projects = [];
+
+        foreach ($this->getTasks() as $task) {
+            $project = $task->getProject();
+            $projects[$project->getId()] = $project;
+        }
+
+        ksort($projects);
+
+        return new ArrayCollection($projects);
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    public function getLines(): ?array
+    {
+        $lines = [];
+
+        $times = $this->getTimes();
+        foreach ($times as $time) {
+            // Get task and project
+            $task = $time->getTask();
+            $project = $task->getProject();
+
+            // Get line key
+            $hourly = $task->getBilling() === 'hourly';
+            $key = $project->getId() . '-' . $task->getBilling() . '-' . ($hourly ? $task->getPrice() : $task->getId());
+
+            // Get line
+            if (!isset($lines[$key])) {
+                $lines[$key] = [
+                    'amount' => 0,
+                    'price' => $task->getPrice(),
+                    'quantity' => 0,
+                    'tasks' => [],
+                ];
+            }
+            $line = &$lines[$key];
+
+            // Update values
+            if ($hourly) {
+                $line['quantity'] += $time->getHours();
+                $line['tasks'][] = $task->getName();
+            } else {
+                $line['quantity'] = 1;
+                $line['tasks'] = [$task->getName()];
+            }
+            $line['amount'] = $line['price'] * $line['quantity'];
+            $line['tasks'] = array_unique($line['tasks']);
+            $line['description'] = $project->getName() . ' - ' . implode(', ', $line['tasks']);
+        }
+
+        ksort($lines);
+
+        return $lines;
     }
 }

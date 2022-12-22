@@ -31,11 +31,17 @@ class Client
     private ?string $address = null;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Project::class)]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $projects;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Invoice::class)]
+    #[ORM\OrderBy(['id' => 'DESC'])]
+    private Collection $invoices;
 
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,20 +118,29 @@ class Client
     }
 
     /**
-     * @return ArrayCollection<int, Invoice>
+     * @return Collection<int, Invoice>
      */
-    public function getInvoices(): ArrayCollection
+    public function getInvoices(): Collection
     {
-        $invoices = [];
+        return $this->invoices;
+    }
 
-        foreach ($this->getProjects() as $project) {
-            $invoices = array_merge($invoices, $project->getInvoices()->toArray());
+    public function addInvoice(Invoice $invoice): self
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setClient($this);
         }
 
-        usort($invoices, function ($a, $b) {
-            return $a->getId() < $b->getId() ? -1 : 1;
-        });
+        return $this;
+    }
 
-        return new ArrayCollection($invoices);
+    public function removeInvoice(Invoice $invoice): self
+    {
+        if ($this->invoices->removeElement($invoice) && $invoice->getClient() === $this) {
+            $invoice->setClient(null);
+        }
+
+        return $this;
     }
 }

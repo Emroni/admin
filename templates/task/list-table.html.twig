@@ -1,0 +1,37 @@
+{% embed 'partials/card.html.twig' with {title:tasks|length ~ ' Tasks'} %}
+    {% block actions %}
+        {% include 'partials/link.html.twig' with {name:'Add', path:path('task_add')} %}
+    {% endblock %}
+    {% block body %}
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    {% if project is not defined %}
+                        <th>Project</th>
+                    {% endif %}
+                    <th>Billing</th>
+                    <th>Currency</th>
+                    <th>Price</th>
+                    <th>Times</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr data-link="{{ path('task_view', {id:task.id}) }}">
+                        <td>{{ task.name }}</td>
+                        {% if project is not defined %}
+                            <td>
+                                <a href="{{ path('project_view', {id:task.project.id}) }}">{{ task.project.name }}</a>
+                            </td>
+                        {% endif %}
+                        <td>{{ task.billing }}</td>
+                        <td>{{ task.currency }}</td>
+                        <td>{{ task.price }}</td>
+                        <td>{{ task.times|length }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}
+{% endembed %}

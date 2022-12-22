@@ -1,0 +1,53 @@
+{% embed 'partials/card.html.twig' with {title:invoices|length ~ ' Invoices'} %}
+    {% block actions %}
+        {% include 'partials/link.html.twig' with {name:'Add', path:path('invoice_add')} %}
+    {% endblock %}
+    {% block body %}
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    {% if client is not defined %}
+                        <th>Client</th>
+                    {% endif %}
+                    {% if project is not defined %}
+                        <th>Projects</th>
+                    {% endif %}
+                    <th>Type</th>
+                    <th>Currency</th>
+                    <th>Amount</th>
+                    <th>Sent Date</th>
+                    <th>Paid Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices %}
+                    <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
+                        <td>
+                            <span class="bg-{{ invoice.paidDate ? 'success' : 'primary' }} d-inline-block p-1 rounded"></span>
+                        </td>
+                        <td>{{ invoice.name }}</td>
+                        {% if client is not defined %}
+                            <td>
+                                <a href="{{ path('client_view', {id:invoice.client.id}) }}">{{ invoice.client.name }}</a>
+                            </td>
+                        {% endif %}
+                        {% if project is not defined %}
+                            <td>
+                                {% for project in invoice.projects %}
+                                    <a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
+                                {% endfor %}
+                            </td>
+                        {% endif %}
+                        <td>{{ invoice.type }}</td>
+                        <td>{{ invoice.currency }}</td>
+                        <td>{{ invoice.amount }}</td>
+                        <td>{{ invoice.sentDate|date('Y-m-d') }}</td>
+                        <td>{{ invoice.paidDate ? invoice.paidDate|date('Y-m-d') : '' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}
+{% endembed %}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <style>
+            body {
+                font-family: DejaVu Sans, sans-serif;
+            }
+            table {
+                border-collapse: collapse;
+                margin-bottom: 3em;
+                width: 100%;
+            }
+            th, td {
+                text-align: left;
+                vertical-align: top;
+                padding: 0 0.25rem;
+            }
+            .right {
+                text-align: right;
+            }
+            .list th {
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid #000;
+            }
+            .list td {
+                padding-bottom: 1rem;
+                padding-top: 1rem;
+            }
+            .footer {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 5rem;
+            }
+            .footer td {
+                padding-bottom: 0.25rem;
+                padding-top: 0.25rem;
+            }
+            .footer .total td {
+                background-color: #000;
+                color: #fff;
+                font-weight: bold;
+            }
+            b {
+                font-size: 1.125rem;
+            }
+            .invoice {
+                width: 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td>
+                    <b>{{ invoice.client.name }}</b>
+                    <br>
+                    {{ invoice.client.address|nl2br }}
+                </td>
+                <td class="right">
+                    {{ from|raw }}
+                </td>
+            </tr>
+        </table>
+        <table class="invoice">
+            <tr>
+                <th>
+                    <b>Invoice</b>
+                </th>
+            </tr>
+            <tr>
+                <td>Number</td>
+                <td class="right">{{ invoice.number }}</td>
+            </tr>
+            <tr>
+                <td>Date</td>
+                <td class="right">{{ invoice.sentDate|date('d-m-Y') }}</td>
+            </tr>
+            <tr>
+                <td>Term of payment</td>
+                <td class="right">14 days</td>
+            </tr>
+        </table>
+        <table class="list">
+            <tr>
+                <th>Description</th>
+                <th class="right">Price</th>
+                <th class="right">Quantity</th>
+                <th class="right">Amount</th>
+            </tr>
+            {% for line in invoice.lines %}
+                <tr>
+                    <td>{{ line.description }}</td>
+                    <td class="right">{{ line.price|format_currency(invoice.currency) }}</td>
+                    <td class="right">{{ line.quantity|round(3) }}</td>
+                    <td class="right">{{ line.amount|format_currency(invoice.currency) }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <table class="footer">
+            <tr class="total">
+                <td>TOTAL SUM</td>
+                <td class="right">{{ invoice.amount|format_currency(invoice.currency) }}</td>
+            </tr>
+            <tr>
+                <td colspan="2">Please state the invoice number with the payment</td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -32,6 +32,7 @@ class Task
     private ?float $price = null;
 
     #[ORM\OneToMany(mappedBy: 'task', targetEntity: Time::class)]
+    #[ORM\OrderBy(['date' => 'DESC'])]
     private Collection $times;
 
     public function __construct()
@@ -89,6 +90,11 @@ class Task
 
         return $this;
     }
+    
+    public function isBilling(string $billing): bool
+    {
+        return $this->getBilling() === $billing;
+    }
 
     public function getCurrency(): ?string
     {
@@ -139,5 +145,26 @@ class Task
         }
 
         return $this;
+    }
+    
+    /**
+     * @return ArrayCollection<int, Invoice>
+     */
+    public function getInvoices(): ArrayCollection
+    {
+        // TODO: Can this be a query?
+        
+        $invoices = [];
+
+        foreach ($this->getTimes() as $time) {
+            $invoice = $time->getInvoice();
+            if ($invoice) {
+                $invoices[$invoice->getId()] = $invoice;
+            }
+        }
+
+        krsort($invoices);
+
+        return new ArrayCollection($invoices);
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Form\Type;
 
-use App\Entity\Project;
+use App\Entity\Client;
 use App\Entity\Invoice;
-use App\Repository\ProjectRepository;
+use App\Entity\Time;
+use App\Repository\ClientRepository;
+use App\Repository\TimeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,25 +19,41 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InvoiceType extends AbstractType
 {
+    /** @var ClientRepository */
+    private $clientRepository;
+
+    /** @var TimeRepository */
+    private $timeRepository;
+
+    public function __construct(ClientRepository $clientRepository, TimeRepository $timeRepository)
+    {
+        $this->clientRepository = $clientRepository;
+        $this->timeRepository = $timeRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // Get entities
+        // Get invoice
         $invoice = $options['data'] ?? null;
-        $project = $invoice->getProject();
+
+        // Get times
+        $times = [];
+        if ($invoice) {
+            $times = $invoice->getTimes();
+            if (!$invoice->getId() && $times[0]) {
+                $client = $times[0]->getTask()->getProject()->getClient();
+                $times = $this->timeRepository->findBillableByClient($client);
+            }
+        }
 
         // Build form
         $builder
-            ->add('project', EntityType::class, [
-                'class'         => Project::class,
-                'choice_label' => 'fullName',
-                'query_builder' => function (ProjectRepository $projectRepository) use ($project) {
-                    if ($project) {
-                        $client = $project->getClient();
-                        return $projectRepository->queryByClient($client);
-                    }
-                    return $projectRepository->queryAll();
-                },
+            ->add('client', EntityType::class, [
+                'choices' => $this->clientRepository->findAll(),
+                'choice_label' => 'name',
+                'class' => Client::class,
             ])
+            ->add('number', NumberType::class)
             ->add('type', TextType::class)
             ->add('currency', ChoiceType::class, [
                 'choices' => [
@@ -50,6 +68,13 @@ class InvoiceType extends AbstractType
             ->add('paid_date', DateType::class, [
                 'required' => false,
                 'widget' => 'single_text',
+            ])
+            ->add('times', EntityType::class, [
+                'choice_label' => 'fullName',
+                'choices' => $times,
+                'class' => Time::class,
+                'expanded' => true,
+                'multiple' => true,
             ])
             ->add('save', SubmitType::class);
 

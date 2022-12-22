@@ -23,15 +23,12 @@ class Project
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Task::class)]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $tasks;
-
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Invoice::class)]
-    private Collection $invoices;
 
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
-        $this->invoices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,29 +98,22 @@ class Project
     }
 
     /**
-     * @return Collection<int, Invoice>
+     * @return ArrayCollection<int, Invoice>
      */
-    public function getInvoices(): Collection
+    public function getInvoices(): ArrayCollection
     {
-        return $this->invoices;
-    }
+        // TODO: Can this be a query?
 
-    public function addInvoice(Invoice $invoice): self
-    {
-        if (!$this->invoices->contains($invoice)) {
-            $this->invoices->add($invoice);
-            $invoice->setProject($this);
+        $invoices = [];
+
+        foreach ($this->getTasks() as $task) {
+            foreach ($task->getInvoices() as $invoice) {
+                $invoices[$invoice->getId()] = $invoice;
+            }
         }
 
-        return $this;
-    }
+        krsort($invoices);
 
-    public function removeInvoice(Invoice $invoice): self
-    {
-        if ($this->invoices->removeElement($invoice) && $invoice->getProject() === $this) {
-            $invoice->setProject(null);
-        }
-
-        return $this;
+        return new ArrayCollection($invoices);
     }
 }

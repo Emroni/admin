@@ -2,6 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Client;
+use App\Entity\Project;
+use App\Entity\Task;
 use App\Entity\Time;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -41,14 +44,92 @@ class TimeRepository extends ServiceEntityRepository
 
     public function findAll()
     {
-        return $this->queryAll()
+        return $this->findBy([], [
+            'date' => 'DESC',
+        ]);
+    }
+
+    public function findByClient(Client $client)
+    {
+        return $this->createQueryBuilder('time')
+            ->setParameter('client', $client)
+            ->leftJoin('time.task', 'task')
+            ->leftJoin('task.project', 'project')
+            ->leftJoin('project.client', 'client')
+            ->where('client = :client')
+            ->orderBy('time.date', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
-    public function queryAll()
+    public function findByProject(Project $project)
     {
-        return $this->createQueryBuilder('t')
-            ->orderBy('t.date', 'DESC');
+        return $this->createQueryBuilder('time')
+            ->setParameter('project', $project)
+            ->leftJoin('time.task', 'task')
+            ->leftJoin('task.project', 'project')
+            ->where('project = :project')
+            ->orderBy('time.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByTask(Task $task)
+    {
+        return $this->createQueryBuilder('time')
+            ->setParameter('task', $task)
+            ->leftJoin('time.task', 'task')
+            ->where('task = :task')
+            ->orderBy('time.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBillable()
+    {
+        return $this->createQueryBuilder('time')
+            ->where('time.invoice is NULL')
+            ->orderBy('time.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBillableByClient(Client $client)
+    {
+        return $this->createQueryBuilder('time')
+            ->setParameter('client', $client)
+            ->leftJoin('time.task', 'task')
+            ->leftJoin('task.project', 'project')
+            ->leftJoin('project.client', 'client')
+            ->where('client = :client')
+            ->andWhere('time.invoice is NULL')
+            ->orderBy('time.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBillableByProject(Project $project)
+    {
+        return $this->createQueryBuilder('time')
+            ->setParameter('project', $project)
+            ->leftJoin('time.task', 'task')
+            ->leftJoin('task.project', 'project')
+            ->where('project = :project')
+            ->andWhere('time.invoice is NULL')
+            ->orderBy('time.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBillableByTask(Task $task)
+    {
+        return $this->createQueryBuilder('time')
+            ->setParameter('task', $task)
+            ->leftJoin('time.task', 'task')
+            ->where('task = :task')
+            ->andWhere('time.invoice is NULL')
+            ->orderBy('time.date', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 }

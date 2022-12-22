@@ -19,10 +19,16 @@ class TimeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // Get entities
-        $time = $options['data'] ?? null;
-        $invoice = $time->getInvoice();
+        // Get time
+        $time = $options['data'];
         $task = $time->getTask();
+        
+        // Get invoices
+        $invoices = [];
+        $invoice = $time->getInvoice();
+        if ($invoice) {
+            $invoices = [$invoice];
+        }
 
         // Build form
         $builder
@@ -44,15 +50,10 @@ class TimeType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('invoice', EntityType::class, [
-                'class' => Invoice::class,
                 'choice_label' => 'fullName',
-                'query_builder' => function (InvoiceRepository $invoiceRepository) use ($invoice) {
-                    if ($invoice) {
-                        $project = $invoice->getProject();
-                        return $invoiceRepository->queryByProject($project);
-                    }
-                    return $invoiceRepository->queryAll();
-                },
+                'choices' => $invoices,
+                'class' => Invoice::class,
+                'disabled' => true,
                 'required' => false,
             ])
             ->add('save', SubmitType::class);
