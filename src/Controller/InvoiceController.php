@@ -10,6 +10,7 @@ use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
 use App\Repository\TimeRepository;
 use DateTime;
+use Dompdf\Dompdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
@@ -183,6 +184,36 @@ class InvoiceController extends AbstractController
 
         return $this->render('invoice/view.html.twig', [
             'invoice' => $invoice,
+        ]);
+    }
+
+    #[Route('/invoice/{id}/pdf', name: 'invoice_pdf')]
+    public function pdf(int $id, Request $request)
+    {
+        $invoice = $this->invoiceRepository->find($id);
+        $title = $invoice->getNumber() . ' - ' . $invoice->getClient()->getName();
+
+        $html = $this->render('invoice/pdf.html.twig', [
+            'invoice' => $invoice,
+            'from'    => $this->getParameter('invoice.from'),
+            'root'    => $this->getParameter('kernel.project_dir'),
+            'title'   => $title,
+        ]);
+
+        if ($request->get('html') !== null) {
+            return $html;
+        }
+
+        $slug = str_replace(' - ', '-', $title);
+        $slug = str_replace(' ', '_', $slug);
+
+        ob_end_clean();
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+        $dompdf->stream("{$slug}.pdf", [
+            'Attachment' => false,
         ]);
     }
 }

@@ -6,6 +6,7 @@
 	{% embed 'partials/card.html.twig' %}
 		{% block actions %}
 			{% include 'partials/link.html.twig' with {name:'Paid', path:path('invoice_paid', {id:invoice.id}), disabled:invoice.paidDate} %}
+			{% include 'partials/link.html.twig' with {name:'PDF', url:path('invoice_pdf', {id:invoice.id})} %}
 			{% include 'partials/link.html.twig' with {name:'Edit', path:path('invoice_edit', {id:invoice.id})} %}
 		{% endblock %}
 		{% block body %}

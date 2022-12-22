@@ -257,4 +257,47 @@ class Invoice
 
         return $this;
     }
+
+    public function getLines(): ?array
+    {
+        $lines = [];
+
+        $times = $this->getTimes();
+        foreach ($times as $time) {
+            // Get task and project
+            $task = $time->getTask();
+            $project = $task->getProject();
+
+            // Get line key
+            $hourly = $task->getBilling() === 'hourly';
+            $key = $project->getId() . '-' . $task->getBilling() . '-' . ($hourly ? $task->getPrice() : $task->getId());
+
+            // Get line
+            if (!isset($lines[$key])) {
+                $lines[$key] = [
+                    'amount' => 0,
+                    'price' => $task->getPrice(),
+                    'quantity' => 0,
+                    'tasks' => [],
+                ];
+            }
+            $line = &$lines[$key];
+
+            // Update values
+            if ($hourly) {
+                $line['quantity'] += $time->getHours();
+                $line['tasks'][] = $task->getName();
+            } else {
+                $line['quantity'] = 1;
+                $line['tasks'] = [$task->getName()];
+            }
+            $line['amount'] = $line['price'] * $line['quantity'];
+            $line['tasks'] = array_unique($line['tasks']);
+            $line['description'] = $project->getName() . ' - ' . implode(', ', $line['tasks']);
+        }
+
+        ksort($lines);
+
+        return $lines;
+    }
 }
