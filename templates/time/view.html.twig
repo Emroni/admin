@@ -3,10 +3,9 @@
 {% set title = time.name %}
 
 {% block content %}
-	{% embed 'partials/card.html.twig' %}
-		{% block actions %}
-            {% include 'partials/link.html.twig' with {name:'Edit', path:path('time_edit', {id:time.id})} %}
-		{% endblock %}
+	{% embed 'partials/card.html.twig' with {title:time.name, actions:actions|default([
+        {name:'Edit', path:path('time_edit', {id:time.id})},
+    ])} %}
 		{% block body %}
 			<table class="table table-sm table-hover">
 				<tbody>

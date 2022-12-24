@@ -1,7 +1,6 @@
-{% embed 'partials/card.html.twig' with {title:times|length ~ ' Times'} %}
-    {% block actions %}
-        {% include 'partials/link.html.twig' with {name:'Add', path:path('time_add')} %}
-    {% endblock %}
+{% embed 'partials/card.html.twig' with {title:times|length ~ ' Times', actions:actions is defined ? actions : [
+    {name:'Add', path:path('time_add')},
+]} %}
     {% block body %}
         <table class="table table-sm table-hover">
             <thead>

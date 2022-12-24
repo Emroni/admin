@@ -3,10 +3,9 @@
 {% set title = client.name %}
 
 {% block content %}
-	{% embed 'partials/card.html.twig' %}
-		{% block actions %}
-            {% include 'partials/link.html.twig' with {name:'Edit', path:path('client_edit', {id:client.id})} %}
-		{% endblock %}
+	{% embed 'partials/card.html.twig' with {title:client.name, actions:actions|default([
+        {name:'Edit', path:path('client_edit', {id:client.id})},
+    ])} %}
 		{% block body %}
 			<table class="table table-sm table-hover">
 				<tbody>
@@ -37,6 +36,11 @@
 		{% endblock %}
 	{% endembed %}
 
-    {% include 'project/list-table.html.twig' with {projects:client.projects} %}
-    {% include 'invoice/list-table.html.twig' with {invoices:client.invoices} %}
+    {% include 'project/list-table.html.twig' with {projects:client.projects, actions:[
+        {name:'Add', path:path('project_add', {client:client.id})},
+    ]} %}
+
+    {% include 'invoice/list-table.html.twig' with {invoices:client.invoices, actions:[
+        {name:'Add', path:path('invoice_add', {client:client.id})},
+    ]} %}
 {% endblock %}

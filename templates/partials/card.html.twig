@@ -3,9 +3,15 @@
         <h1 class="card-title m-0 h3">
             {{ title }}
         </h1>
+        {% if actions is defined %}
             <div class="btn-group-sm">
-                {% block actions %}{% endblock %}
+                {% for action in actions %}
+                    <a class="btn btn-secondary {{ action.disabled|default ? 'disabled' : '' }}" href="{{ action.url|default(action.path|default) }}" {{ action.url|default ? 'target="_blank"' : '' }}>
+                        {{ action.name }}
+                    </a>
+                {% endfor %}
             </div>
+        {% endif %}
     </div>
     <div class="card-body">
         {% block body %}{% endblock %}

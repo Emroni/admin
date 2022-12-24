@@ -1,6 +1,0 @@
-{% set disabled = disabled|default ? 'disabled' : '' %}
-{% set href = url|default(path|default) %}
-{% set target = url|default ? 'target="_blank"' : ''  %}
-<a class="btn btn-secondary {{ disabled }}" href="{{ href }}" {{ target }}>
-    {{ name }}
-</a>

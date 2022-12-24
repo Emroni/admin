@@ -3,12 +3,11 @@
 {% set title = invoice.name %}
 
 {% block content %}
-	{% embed 'partials/card.html.twig' %}
-		{% block actions %}
-			{% include 'partials/link.html.twig' with {name:'Paid', path:path('invoice_paid', {id:invoice.id}), disabled:invoice.paidDate} %}
-			{% include 'partials/link.html.twig' with {name:'PDF', url:path('invoice_pdf', {id:invoice.id})} %}
-			{% include 'partials/link.html.twig' with {name:'Edit', path:path('invoice_edit', {id:invoice.id})} %}
-		{% endblock %}
+	{% embed 'partials/card.html.twig' with {title:invoice.name, actions:actions|default([
+        {name:'Paid', path:path('invoice_paid', {id:invoice.id}), disabled:invoice.paidDate},
+        {name:'PDF', url:path('invoice_pdf', {id:invoice.id})},
+        {name:'Edit', path:path('invoice_edit', {id:invoice.id})},
+    ])} %}
 		{% block body %}
 			<table class="table table-sm table-hover">
 				<tbody>
@@ -55,5 +54,5 @@
 		{% endblock %}
 	{% endembed %}
 
-	{% include 'time/list-table.html.twig' with {times:invoice.times} %}
+	{% include 'time/list-table.html.twig' with {times:invoice.times, actions:[]} %}
 {% endblock %}
