@@ -34,12 +34,8 @@
 						<td>{{ invoice.number }}</td>
 					</tr>
 					<tr>
-						<th>Currency</th>
-						<td>{{ invoice.currency }}</td>
-					</tr>
-					<tr>
 						<th>Amount</th>
-						<td>{{ invoice.amount }}</td>
+						<td>{{ invoice.amount|format_currency(invoice.currency) }}</td>
 					</tr>
 					<tr>
 						<th>Sent Date</th>

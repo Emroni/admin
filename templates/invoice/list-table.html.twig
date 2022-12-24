@@ -13,9 +13,7 @@
                     {% if project is not defined %}
                         <th>Projects</th>
                     {% endif %}
-                    <th>Type</th>
-                    <th>Currency</th>
-                    <th>Amount</th>
+                    <th class="text-end">Amount</th>
                     <th>Sent Date</th>
                     <th>Paid Date</th>
                 </tr>
@@ -39,9 +37,7 @@
                                 {% endfor %}
                             </td>
                         {% endif %}
-                        <td>{{ invoice.type }}</td>
-                        <td>{{ invoice.currency }}</td>
-                        <td>{{ invoice.amount }}</td>
+                        <td class="text-end">{{ invoice.amount|format_currency(invoice.currency) }}</td>
                         <td>{{ invoice.sentDate|date('Y-m-d') }}</td>
                         <td>{{ invoice.paidDate ? invoice.paidDate|date('Y-m-d') : '' }}</td>
                     </tr>

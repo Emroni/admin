@@ -38,6 +38,7 @@ class DashboardController extends AbstractController
             if (!isset($billableInvoices[$clientId])) {
                 $invoice = new Invoice();
                 $invoice->setClient($client);
+                $invoice->setCurrency('EUR');
                 $invoice->updateType();
                 $billableInvoices[$clientId] = $invoice;
             }

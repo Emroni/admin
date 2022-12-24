@@ -24,12 +24,8 @@
                         <td>{{ task.billing }}</td>
                     </tr>
                     <tr>
-                        <th>Currency</th>
-                        <td>{{ task.currency }}</td>
-                    </tr>
-                    <tr>
                         <th>Price</th>
-                        <td>{{ task.price }}</td>
+                        <td>{{ task.price|format_currency(task.currency) }}</td>
                     </tr>
                     <tr>
                         <th>Times</th>

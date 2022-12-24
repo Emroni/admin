@@ -9,9 +9,7 @@
 						<th></th>
 						<th>Client</th>
 						<th>Projects</th>
-						<th>Type</th>
-						<th>Currency</th>
-						<th>Amount</th>
+						<th class="text-end">Amount</th>
 						<th>Sent Date</th>
 					</tr>
 				</thead>
@@ -29,9 +27,7 @@
 									<a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
 								{% endfor %}
 							</td>
-							<td>{{ invoice.type }}</td>
-							<td>{{ invoice.currency }}</td>
-							<td>{{ invoice.amount }}</td>
+							<td class="text-end">{{ invoice.amount|format_currency(invoice.currency) }}</td>
 							<td>{{ invoice.sentDate|date('Y-m-d') }}</td>
 						</tr>
 					{% endfor %}
@@ -50,9 +46,7 @@
 									<a href="{{ path('project_view', {id:project.id}) }}">{{ project.name }}</a>
 								{% endfor %}
 							</td>
-							<td>{{ invoice.type }}</td>
-							<td>{{ invoice.currency }}</td>
-							<td>{{ invoice.amount }}</td>
+							<td class="text-end">{{ invoice.amount|format_currency(invoice.currency) }}</td>
 							<td></td>
 						</tr>
 					{% endfor %}
