@@ -10,6 +10,7 @@ use App\Repository\TimeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -55,12 +56,7 @@ class InvoiceType extends AbstractType
             ])
             ->add('number', NumberType::class)
             ->add('type', TextType::class)
-            ->add('currency', ChoiceType::class, [
-                'choices' => [
-                    'EUR' => 'EUR',
-                    'USD' => 'USD',
-                ],
-            ])
+            ->add('currency', CurrencyType::class)
             ->add('amount', NumberType::class)
             ->add('sent_date', DateType::class, [
                 'widget' => 'single_text',
