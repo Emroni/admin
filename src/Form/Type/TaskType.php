@@ -53,7 +53,7 @@ class TaskType extends AbstractType
             $builder->add('delete', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-danger',
-                    'data-confirm' => 'Are you sure you want to delete this Task?',
+                    'data-confirm-text-value' => 'Are you sure you want to delete this Task?',
                     'disabled' => !$task->isDeletable(),
                 ],
             ]);

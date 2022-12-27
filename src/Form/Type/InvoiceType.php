@@ -79,7 +79,7 @@ class InvoiceType extends AbstractType
             $builder->add('delete', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-danger',
-                    'data-confirm' => 'Are you sure you want to delete this Invoice?',
+                    'data-confirm-text-value' => 'Are you sure you want to delete this Invoice?',
                     'disabled' => !$invoice->isDeletable(),
                 ],
             ]);
