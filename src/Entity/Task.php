@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TaskRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -34,6 +35,9 @@ class Task
     #[ORM\OneToMany(mappedBy: 'task', targetEntity: Time::class)]
     #[ORM\OrderBy(['date' => 'DESC'])]
     private Collection $times;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $timer = null;
 
     public function __construct()
     {
@@ -166,5 +170,17 @@ class Task
         krsort($invoices);
 
         return new ArrayCollection($invoices);
+    }
+
+    public function getTimer(): ?\DateTimeInterface
+    {
+        return $this->timer;
+    }
+
+    public function setTimer(?\DateTimeInterface $timer): self
+    {
+        $this->timer = $timer;
+
+        return $this;
     }
 }
