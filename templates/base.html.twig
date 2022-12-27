@@ -3,9 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>{{ title is defined ? (title ~ ' - ') : '' }}Admin</title>
-		<link href="/css/bootstrap.min.css" rel="stylesheet">
-		<link href="/css/main.css" rel="stylesheet">
-		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+		<link href="/assets/bootstrap.min.css" rel="stylesheet">
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
@@ -21,6 +19,5 @@
 				{% block content %}{% endblock %}
 			</main>
 		{% endblock %}
-		<script src="/js/main.js"></script>
 	</body>
 </html>
