@@ -25,7 +25,7 @@
 						{% endif %}
 						<td>{{ task.billing }}</td>
 						<td class="text-end">{{ task.price|format_currency(task.currency) }}</td>
-						<td>
+						<td class="w-px">
                             {% include 'partials/timer.html.twig' with {task:task} %}
 						</td>
 					</tr>

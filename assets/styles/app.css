@@ -5,3 +5,11 @@
 label.required:after {
     content: "*";
 }
+
+.table {
+    table-layout: fixed;
+}
+
+.w-px {
+    width: 1px;
+}

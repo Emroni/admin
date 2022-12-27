@@ -1,10 +1,10 @@
-<a class="text-decoration-none {{ task.timer ? 'text-danger' : 'text-primary' }}" href="{{ path('task_timer', {id:task.id}) }}">
+<a class="text-decoration-none text-nowrap {{ task.timer ? 'text-danger' : 'text-primary' }}" href="{{ path('task_timer', {id:task.id}) }}">
+    <span class="fs-5 lh-1">
+        {{  task.timer ? '■' : '▶' }}
+    </span>
     {% if task.timer %}
-        ■
         <span class="text-dark timer" {{ stimulus_controller('timer', {now:'now'|date('Y-m-d h:i:s'), start:task.timer|date('Y-m-d h:i:s'), title:task.fullName}) }}>
             <span class="text-muted">0:00</span>
         </span>
-    {% else %}
-        ▶
     {% endif %}
 </a>
