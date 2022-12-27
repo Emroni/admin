@@ -15,7 +15,7 @@
             </thead>
             <tbody>
                 {% for time in times %}
-                    <tr data-link="{{ path('time_view', {id:time.id}) }}">
+                    <tr {{ stimulus_controller('link', {path:path('time_view', {id:time.id})}) }}>
                         {% if task is not defined %}
                             <td>
                                 <a href="{{ path('task_view', {id:time.task.id}) }}">{{ time.task.name }}</a>

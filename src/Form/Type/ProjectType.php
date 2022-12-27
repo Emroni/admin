@@ -23,6 +23,7 @@ class ProjectType extends AbstractType
                 'class'         => Client::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ClientRepository $clientRepository) {
+                    // TODO: Replace with find
                     return $clientRepository->queryAll();
                 },
             ])
@@ -34,7 +35,7 @@ class ProjectType extends AbstractType
             $builder->add('delete', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-danger',
-                    'data-confirm' => 'Are you sure you want to delete this Project?',
+                    'data-confirm-text-value' => 'Are you sure you want to delete this Project?',
                     'disabled' => !$project->isDeletable(),
                 ],
             ]);

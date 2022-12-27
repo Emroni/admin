@@ -1,7 +1,14 @@
 {% extends 'bootstrap_5_layout.html.twig' %}
 
 {% block submit_row %}
-    <div class="{{ form.vars.name == 'delete' ? 'float-start' : 'float-end' }}">
-        {{- form_widget(form) -}}
-    </div>
+    {% if form.vars.name == 'delete' %}
+        <div class="float-start" {{ stimulus_controller('confirm')}}>
+            {{- form_widget(form) -}}
+        </div>
+        
+    {% else %}
+        <div class="float-end">
+            {{- form_widget(form) -}}
+        </div>
+    {% endif %}
 {% endblock %}

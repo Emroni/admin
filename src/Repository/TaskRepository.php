@@ -47,6 +47,14 @@ class TaskRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findOneWithTimer()
+    {
+        return $this->createQueryBuilder('task')
+            ->where('task.timer IS NOT NULL')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function queryAll()
     {
         return $this->createQueryBuilder('t')

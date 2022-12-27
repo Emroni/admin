@@ -35,7 +35,7 @@ class ClientType extends AbstractType
             $builder->add('delete', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-danger',
-                    'data-confirm' => 'Are you sure you want to delete this Client?',
+                    'data-confirm-text-value' => 'Are you sure you want to delete this Client?',
                     'disabled' => !$client->isDeletable(),
                 ],
             ]);

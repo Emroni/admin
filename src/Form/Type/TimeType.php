@@ -36,6 +36,7 @@ class TimeType extends AbstractType
                 'class' => Task::class,
                 'choice_label' => 'fullName',
                 'query_builder' => function (TaskRepository $taskRepository) use ($task) {
+                    // TODO: Replace with find
                     if ($task) {
                         $project = $task->getProject();
                         return $taskRepository->queryByProject($project);
@@ -63,7 +64,7 @@ class TimeType extends AbstractType
             $builder->add('delete', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-danger',
-                    'data-confirm' => 'Are you sure you want to delete this Time?',
+                    'data-confirm-text-value' => 'Are you sure you want to delete this Time?',
                     'disabled' => !$time->isDeletable(),
                 ],
             ]);

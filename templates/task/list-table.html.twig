@@ -1,34 +1,36 @@
 {% embed 'partials/card.html.twig' with {title:tasks|length ~ ' Tasks', actions:actions is defined ? actions : [
     {name:'Add', path:path('task_add')},
 ]} %}
-    {% block body %}
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    {% if project is not defined %}
-                        <th>Project</th>
-                    {% endif %}
-                    <th>Billing</th>
-                    <th class="text-end">Price</th>
-                    <th>Times</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for task in tasks %}
-                    <tr data-link="{{ path('task_view', {id:task.id}) }}">
-                        <td>{{ task.name }}</td>
-                        {% if project is not defined %}
-                            <td>
-                                <a href="{{ path('project_view', {id:task.project.id}) }}">{{ task.project.name }}</a>
-                            </td>
-                        {% endif %}
-                        <td>{{ task.billing }}</td>
-                        <td class="text-end">{{ task.price|format_currency(task.currency) }}</td>
-                        <td>{{ task.times|length }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endblock %}
+	{% block body %}
+		<table class="table table-sm table-hover">
+			<thead>
+				<tr>
+					<th>Name</th>
+					{% if project is not defined %}
+						<th>Project</th>
+					{% endif %}
+					<th>Billing</th>
+					<th class="text-end">Price</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for task in tasks %}
+					<tr {{ stimulus_controller('link', {path:path('task_view', {id:task.id})}) }}>
+						<td>{{ task.name }}</td>
+						{% if project is not defined %}
+							<td>
+								<a href="{{ path('project_view', {id:task.project.id}) }}">{{ task.project.name }}</a>
+							</td>
+						{% endif %}
+						<td>{{ task.billing }}</td>
+						<td class="text-end">{{ task.price|format_currency(task.currency) }}</td>
+						<td class="w-px">
+                            {% include 'partials/timer.html.twig' with {task:task} %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endblock %}
 {% endembed %}
