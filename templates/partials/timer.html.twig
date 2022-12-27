@@ -1,0 +1,10 @@
+<a class="text-decoration-none {{ task.timer ? 'text-danger' : 'text-primary' }}" href="{{ path('task_timer', {id:task.id}) }}">
+    {% if task.timer %}
+        ■
+        <span class="text-dark timer" data-now="{{ 'now'|date('Y-m-d h:i:s') }}" data-start="{{ task.timer|date('Y-m-d h:i:s') }}" data-title="{{ task.name ~ ' - ' ~ task.project.name ~ ' - ' ~ task.project.client.name }}">
+            <span class="text-muted">0:00</span>
+        </span>
+    {% else %}
+        ▶
+    {% endif %}
+</a>

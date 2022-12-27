@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Invoice;
 use App\Repository\InvoiceRepository;
+use App\Repository\TaskRepository;
 use App\Repository\TimeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,22 +15,30 @@ class DashboardController extends AbstractController
     /** @var InvoiceRepository */
     private $invoiceRepository;
 
+    /** @var TaskRepository */
+    private $taskRepository;
+
     /** @var TimeRepository */
     private $timeRepository;
 
-    public function __construct(InvoiceRepository $invoiceRepository, TimeRepository $timeRepository)
+    public function __construct(InvoiceRepository $invoiceRepository, TaskRepository $taskRepository, TimeRepository $timeRepository)
     {
         $this->invoiceRepository = $invoiceRepository;
+        $this->taskRepository = $taskRepository;
         $this->timeRepository = $timeRepository;
     }
 
     #[Route('/', name: 'dashboard')]
     public function index(): Response
     {
-        // Get awaiting invoices
-        $awaitingInvoices = $this->invoiceRepository->findAwaiting();
-
-        // Get billable invoices
+        return $this->render('dashboard/index.html.twig', [
+            'awaitingInvoices' => $this->invoiceRepository->findAwaiting(),
+            'billableInvoices' => $this->getBillableInvoices(),
+            'timer' => $this->taskRepository->findOneWithTimer(),
+        ]);
+    }
+    private function getBillableInvoices()
+    {
         $billableInvoices = [];
         foreach ($this->timeRepository->findBillable() as $time) {
             $client = $time->getTask()->getProject()->getClient();
@@ -47,10 +56,6 @@ class DashboardController extends AbstractController
             $invoice->addTime($time);
             $invoice->updateAmount();
         }
-
-        return $this->render('dashboard/index.html.twig', [
-            'awaitingInvoices' => $awaitingInvoices,
-            'billableInvoices' => $billableInvoices,
-        ]);
+        return $billableInvoices;
     }
 }

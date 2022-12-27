@@ -1,6 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
+    {% if timer %}
+        {% embed 'partials/card.html.twig' with {title:'Active timer'} %}
+            {% block body %}
+                <div class="font-weight-bold">
+                    <div>
+                        <a href="{{ path('project_view', {id: timer.project.id}) }}">
+                            {{ timer.fullName }}
+                        </a>
+                    </div>
+                    <div class="mt-2">
+                        {% include 'partials/timer.html.twig' with {task:timer} %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+
 	{% embed 'partials/card.html.twig' with {title:awaitingInvoices|length ~ ' Invoices'} %}
 		{% block body %}
 			<table class="table table-sm table-hover">
