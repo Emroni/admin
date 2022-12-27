@@ -20,7 +20,7 @@
             </thead>
             <tbody>
                 {% for invoice in invoices %}
-                    <tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
+                    <tr {{ stimulus_controller('link', {path:path('invoice_view', {id:invoice.id})}) }}>
                         <td>
                             <span class="bg-{{ invoice.paidDate ? 'success' : 'primary' }} d-inline-block p-1 rounded"></span>
                         </td>

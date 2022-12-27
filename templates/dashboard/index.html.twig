@@ -32,7 +32,7 @@
 				</thead>
 				<tbody>
 					{% for invoice in awaitingInvoices %}
-						<tr data-link="{{ path('invoice_view', {id:invoice.id}) }}">
+						<tr {{ stimulus_controller('link', {path:path('invoice_view', {id:invoice.id})}) }}>
 							<td>
 								<span class="bg-primary d-inline-block p-1 rounded"></span>
 							</td>
@@ -51,7 +51,7 @@
 				</tbody>
 				<tbody>
 					{% for invoice in billableInvoices %}
-						<tr data-link="{{ path('invoice_add', {client:invoice.client.id}) }}">
+						<tr {{ stimulus_controller('link', {path:path('invoice_add', {id:invoice.client.id})}) }}>
 							<td>
 								<span class="bg-warning d-inline-block p-1 rounded"></span>
 							</td>

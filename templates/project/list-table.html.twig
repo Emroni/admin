@@ -15,7 +15,7 @@
             </thead>
             <tbody>
                 {% for project in projects %}
-                    <tr data-link="{{ path('project_view', {id:project.id}) }}">
+                    <tr {{ stimulus_controller('link', {path:path('project_view', {id:project.id})}) }}>
                         <td>{{ project.name }}</td>
                         {% if client is not defined %}
                             <td>

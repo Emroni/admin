@@ -16,7 +16,7 @@
 			</thead>
 			<tbody>
 				{% for task in tasks %}
-					<tr data-link="{{ path('task_view', {id:task.id}) }}">
+					<tr {{ stimulus_controller('link', {path:path('task_view', {id:task.id})}) }}>
 						<td>{{ task.name }}</td>
 						{% if project is not defined %}
 							<td>
