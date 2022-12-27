@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    
+
     connect() {
         const button = this.element.children[0];
         button.addEventListener('click', this.handleClick);
@@ -13,6 +13,6 @@ export default class extends Controller {
         if (!window.confirm(text)) {
             e.preventDefault();
         }
-    }
+    };
 
 }

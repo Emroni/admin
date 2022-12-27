@@ -1,7 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    
+
+    static values = {
+        path: String,
+    };
+
     connect() {
         this.element.addEventListener('click', this.handleClick);
         this.element.addEventListener('auxclick', this.handleClick);
@@ -9,13 +13,12 @@ export default class extends Controller {
 
     handleClick = (e) => {
         if (!e.target.getAttribute('href')) {
-            const link = e.currentTarget.getAttribute('data-link-path-value');
             if (e.ctrlKey || e.metaKey || e.type === 'auxclick') {
-                window.open(link);
+                window.open(this.pathValue);
             } else {
-                window.location = link;
+                window.location = this.pathValue;
             }
         }
-    }
+    };
 
 }
