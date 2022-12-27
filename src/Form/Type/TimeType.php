@@ -36,6 +36,7 @@ class TimeType extends AbstractType
                 'class' => Task::class,
                 'choice_label' => 'fullName',
                 'query_builder' => function (TaskRepository $taskRepository) use ($task) {
+                    // TODO: Replace with find
                     if ($task) {
                         $project = $task->getProject();
                         return $taskRepository->queryByProject($project);

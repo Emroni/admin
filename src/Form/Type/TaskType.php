@@ -30,6 +30,7 @@ class TaskType extends AbstractType
                 'class'         => Project::class,
                 'choice_label' => 'fullName',
                 'query_builder' => function (ProjectRepository $projectRepository) use ($project) {
+                    // TODO: Replace with find
                     if ($project) {
                         $client = $project->getClient();
                         return $projectRepository->queryByClient($client);

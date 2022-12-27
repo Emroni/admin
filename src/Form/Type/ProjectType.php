@@ -23,6 +23,7 @@ class ProjectType extends AbstractType
                 'class'         => Client::class,
                 'choice_label' => 'name',
                 'query_builder' => function (ClientRepository $clientRepository) {
+                    // TODO: Replace with find
                     return $clientRepository->queryAll();
                 },
             ])
