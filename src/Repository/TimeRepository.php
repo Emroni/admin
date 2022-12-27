@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\Project;
 use App\Entity\Task;
 use App\Entity\Time;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -83,6 +84,18 @@ class TimeRepository extends ServiceEntityRepository
             ->orderBy('time.date', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findOneByTaskAndDate(Task $task, DateTime $date)
+    {
+        return $this->createQueryBuilder('time')
+            ->setParameter('task', $task)
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->leftJoin('time.task', 'task')
+            ->where('time.task = :task')
+            ->andWhere('time.date = :date')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function findBillable()

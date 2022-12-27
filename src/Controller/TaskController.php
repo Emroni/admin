@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\Time;
 use App\Form\Type\TaskType;
 use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
+use App\Repository\TimeRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +23,14 @@ class TaskController extends AbstractController
     /** @var TaskRepository */
     private $taskRepository;
 
-    public function __construct(ProjectRepository $projectRepository, TaskRepository $taskRepository)
+    /** @var TimeRepository */
+    private $timeRepository;
+
+    public function __construct(ProjectRepository $projectRepository, TaskRepository $taskRepository, TimeRepository $timeRepository)
     {
         $this->projectRepository = $projectRepository;
         $this->taskRepository = $taskRepository;
+        $this->timeRepository = $timeRepository;
     }
 
     #[Route('/task', name: 'task_list')]
@@ -41,7 +48,7 @@ class TaskController extends AbstractController
     {
         // Create task
         $task = new Task();
-        $task->setBilling('hourly');
+        $task->setBilling('timely');
         $task->setCurrency('EUR');
 
         // Add project
@@ -125,6 +132,51 @@ class TaskController extends AbstractController
         return $this->render('partials/form.html.twig', [
             'form' => $form,
             'formTitle' => 'Edit ' . $task->getName(),
+        ]);
+    }
+
+    #[Route('/task/{id}/timer', name: 'task_timer')]
+    public function timer(int $id): Response
+    {
+        $current = $this->taskRepository->findOneWithTimer();
+        $task = $this->taskRepository->find($id);
+        $now = new DateTime();
+
+        if ($current) {
+            $diff = $now->diff($current->getTimer());
+            $minutes = ($diff->d * 24 * 60) + ($diff->h * 60) + $diff->i;
+
+            if ($minutes) {
+                $time = $this->timeRepository->findOneByTaskAndDate($current, $now);
+                if ($time) {
+                    $duration = $time->getDuration();
+                    $minutes += (int) $duration->format('G') * 60 + (int) $duration->format('i');
+
+                } else {
+                    $time = new Time();
+                    $time->setTask($current);
+                    $time->setDate($now);
+                }
+
+                $hours = floor($minutes / 60);
+                $minutes %= 60;
+                $duration = new DateTime("{$hours}:{$minutes}:00");
+
+                $time->setDuration($duration);
+                $this->timeRepository->save($time, true);
+            }
+
+            $current->setTimer(null);
+            $this->taskRepository->save($current, true);
+        }
+
+        if (!$current || $current->getId() != $task->getId()) {
+            $task->setTimer($now);
+            $this->taskRepository->save($task, true);
+        }
+
+        return $this->redirectToRoute('project_view', [
+            'id' => $task->getProject()->getId(),
         ]);
     }
 }
