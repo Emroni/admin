@@ -4,7 +4,7 @@
     </span>
     {% if task.timer %}
         <span class="text-dark timer" {{ stimulus_controller('timer', {now:'now'|date('Y-m-d h:i:s'), start:task.timer|date('Y-m-d h:i:s'), title:task.fullName}) }}>
-            <span class="text-muted">0:00</span>
+            <span class="text-muted">--:--</span>
         </span>
     {% endif %}
 </a>
